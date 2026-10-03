@@ -1,0 +1,53 @@
+{% load static %}
+<aside class="owner-pro-sidebar">
+
+  <a href="{% url 'accounts:accueil' %}" class="owner-pro-logo site-logo-link">
+    <div class="owner-pro-logo-icon"><i class="bx bxs-home"></i></div>
+    <div>
+      <img src="{% static 'images/logo.png' %}" alt="Logement Immobilier" class="site-logo-img">
+    </div>
+  </a>
+
+  <nav class="owner-pro-nav">
+
+    <a href="{% url 'dashboard:owner_dashboard' %}"
+       class="owner-pro-link {% if active == 'dashboard' %}active{% endif %}">
+      <span>⌂</span>
+      Dashboard
+    </a>
+
+    <a href="{% url 'properties:mes_annonces' %}"
+       class="owner-pro-link {% if active == 'annonces' %}active{% endif %}">
+      <span><i class="bx bx-grid"></i></span>
+      Mes Annonces
+    </a>
+
+    <a href="{% url 'properties:creer_annonce' %}"
+       class="owner-pro-link {% if active == 'creer' %}active{% endif %}">
+      <span>⊞</span>
+      Créer une annonce
+    </a>
+
+    <a href="{% url 'visits:demandes_visite' %}"
+       class="owner-pro-link {% if active == 'visites' %}active{% endif %}">
+      <span><i class="bx bx-calendar-check"></i></span>
+      Demandes de visite
+    </a>
+
+    <a href="{% url 'accounts:profil_proprietaire' %}"
+       class="owner-pro-link {% if active == 'profil' %}active{% endif %}">
+      <span><i class="bx bxs-user-badge"></i></span>
+      Profil
+    </a>
+
+  </nav>
+
+  <form method="post" action="{% url 'logout' %}" class="owner-pro-logout-form">
+    {% csrf_token %}
+    <button type="submit" class="owner-pro-logout">
+      <span><i class="bx bx-log-out"></i></span>
+      Logout
+    </button>
+  </form>
+
+</aside>

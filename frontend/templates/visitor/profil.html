@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Profil Visiteur{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/profile-v2.css' %}?v=20260518">
+{% endblock %}
+
+{% block body %}
+
+<div class="visitor-page">
+
+  <section class="profile-page-v2">
+
+    <div class="profile-topbar-v2">
+      <div class="profile-search-v2">
+        <i class="bx bx-search"></i>
+        <input type="text" placeholder="Rechercher une annonce, une ville, un quartier...">
+      </div>
+
+      {% include "includes/user_profile_button.html" %}
+    </div>
+
+    <h1 class="profile-main-title-v2">Mon Profil</h1>
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="profile-grid-v2">
+
+        <div class="profile-left-v2">
+
+          <div class="profile-card-v2 profile-hero-v2">
+            <div class="profile-photo-v2">
+              {% if request.user.profile.photo %}
+                <img src="{{ request.user.profile.photo.url }}" alt="Photo de profil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+              {% else %}
+                <i class="bx bxs-user"></i>
+              {% endif %}
+            </div>
+
+            <div>
+              <h2>{{ request.user.get_full_name|default:request.user.username }}</h2>
+              <span class="profile-role-v2"><i class="bx bxs-user"></i> Visiteur</span>
+              <p><i class="bx bx-calendar"></i> Membre depuis {{ request.user.date_joined|date:"d/m/Y" }}</p>
+            </div>
+          </div>
+
+          <div class="profile-card-v2">
+            <h3><i class="bx bxs-user"></i> Informations personnelles</h3>
+
+            <div class="profile-form-line">
+              <label>Prénom</label>
+              {{ user_form.first_name }}
+            </div>
+
+            <div class="profile-form-line">
+              <label>Nom</label>
+              {{ user_form.last_name }}
+            </div>
+
+            <div class="profile-form-line">
+              <label>Email</label>
+              {{ user_form.email }}
+            </div>
+
+            <div class="profile-form-line">
+              <label>Téléphone</label>
+              {{ profile_form.telephone }}
+            </div>
+
+            <div class="profile-form-line">
+              <label>Ville</label>
+              {{ profile_form.ville }}
+            </div>
+
+            <div class="profile-form-line">
+              <label>Adresse</label>
+              {{ profile_form.adresse }}
+            </div>
+
+            <div class="profile-form-line">
+              <label>Photo de profil</label>
+              {{ profile_form.photo }}
+            </div>
+          </div>
+
+          <div class="profile-card-v2">
+            <h3><i class="bx bx-bar-chart-alt-2"></i> Mes statistiques</h3>
+
+            <div class="profile-stats-v2">
+              <div class="profile-stat-v2">
+                <div class="stat-icon-v2 blue"><i class="bx bx-heart"></i></div>
+                <strong>{{ favoris_count|default:"0" }}</strong>
+                <span>Annonces favorites</span>
+              </div>
+
+              <div class="profile-stat-v2">
+                <div class="stat-icon-v2 green"><i class="bx bx-calendar"></i></div>
+                <strong>{{ demandes_count|default:"0" }}</strong>
+                <span>Demandes de visite</span>
+              </div>
+
+              <div class="profile-stat-v2">
+                <div class="stat-icon-v2 orange"><i class="bx bx-check"></i></div>
+                <strong>{{ demandes_acceptees|default:"0" }}</strong>
+                <span>Demandes acceptées</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="profile-right-v2">
+
+          <div class="profile-card-v2">
+            <h3><i class="bx bx-cog"></i>️ Paramètres du compte</h3>
+
+            <a href="{% url 'accounts:changer_mot_de_passe' %}" class="password-btn-v2">
+              <i class="bx bx-lock-alt"></i> Changer le mot de passe
+            </a>
+          </div>
+
+          <div class="profile-card-v2">
+            <h3>Navigation</h3>
+
+            <div class="profile-actions-v2" style="grid-template-columns: 1fr;">
+              <a href="{% url 'dashboard:visitor_dashboard' %}" class="profile-cancel-v2">
+                Retour aux annonces
+              </a>
+
+              <a href="{% url 'favorites:mes_favoris' %}" class="profile-cancel-v2">
+                Mes favoris
+              </a>
+
+              <a href="{% url 'visits:mes_demandes_visiteur' %}" class="profile-cancel-v2">
+                Mes demandes
+              </a>
+            </div>
+          </div>
+
+          <div class="profile-actions-v2">
+            <a href="{% url 'dashboard:visitor_dashboard' %}" class="profile-cancel-v2">
+              Annuler
+            </a>
+
+            <button type="submit" class="profile-save-v2">
+              Enregistrer les modifications
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </form>
+
+  </section>
+
+</div>
+
+{% endblock %}

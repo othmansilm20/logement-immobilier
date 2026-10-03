@@ -1,0 +1,51 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>{% block title %}Logement Immobilier{% endblock %}</title>
+
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=20260518">
+  <link rel="stylesheet" href="{% static 'css/modern-theme.css' %}?v=20260516">
+  <link rel="stylesheet" href="{% static 'css/dark-sidebar-fixes.css' %}?v=20260518-5">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+
+  <!-- Icons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li class="{{ message.tags }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% block body %}
+  {% endblock %}
+
+  <button id="themeToggle" class="theme-toggle-btn" type="button" title="Changer le thème">
+    <i class="bx bx-moon"></i>
+  </button>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- JS principal -->
+  <script src="{% static 'js/main.js' %}?v=20260518"></script>
+
+  {% block extra_js %}{% endblock %}
+
+</body>
+</html>

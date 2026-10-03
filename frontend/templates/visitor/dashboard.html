@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% load static %}
+{% load format_filters %}
+
+{% block title %}Dashboard Visiteur{% endblock %}
+
+{% block body %}
+
+<div class="visitor-page">
+
+  <!-- TOPBAR -->
+  <header class="visitor-topbar">
+
+    <a href="{% url 'accounts:accueil' %}" class="visitor-logo site-logo-link">
+      <img src="{% static 'images/logo.png' %}" alt="Logement Immobilier" class="site-logo-img">
+      <i class="bx bxs-home"></i> <strong>Logement <span>Immobilier</span></strong>
+    </a>
+
+    <!-- Recherche rapide en haut -->
+    <form method="get" action="{% url 'dashboard:visitor_dashboard' %}" class="visitor-top-search">
+      <input 
+        type="text" 
+        name="q" 
+        placeholder="Rechercher une annonce, une ville, un quartier..." 
+        value="{{ request.GET.q }}"
+      >
+      <button type="submit"><i class="bx bx-search"></i></button>
+    </form>
+
+    <div class="visitor-top-actions">
+
+      <a href="{% url 'favorites:mes_favoris' %}" class="visitor-top-btn">
+        <i class="bx bx-heart"></i> Mes favoris
+      </a>
+
+      <a href="{% url 'visits:mes_demandes_visiteur' %}" class="visitor-top-btn">
+        <i class="bx bx-calendar"></i> Mes demandes
+      </a>
+
+      <a href="{% url 'dashboard:visitor_dashboard' %}" class="visitor-top-btn">
+        ← Retour
+      </a>
+
+    </div>
+
+    {% include "includes/user_profile_button.html" %}
+
+  </header>
+
+  <!-- CONTENU -->
+  <main class="visitor-content">
+
+    <!-- FILTRES -->
+    <form method="get" action="{% url 'dashboard:visitor_dashboard' %}" class="visitor-filters-card">
+
+      <div class="visitor-search-line">
+        <i class="bx bx-search"></i>
+        <input 
+          type="text" 
+          name="q" 
+          placeholder="Rechercher une annonce..." 
+          value="{{ request.GET.q }}"
+        >
+      </div>
+
+      <div class="visitor-filters-grid">
+
+        <div class="visitor-filter">
+          <label>Ville</label>
+          <select name="ville">
+            <option value="">Toutes les villes</option>
+
+            {% for v in villes %}
+              <option value="{{ v }}" {% if request.GET.ville == v %}selected{% endif %}>
+                {{ v }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="visitor-filter">
+          <label>Type de bien</label>
+          <select name="type_bien">
+            <option value="">Tous les types</option>
+
+            <option value="appartement" {% if request.GET.type_bien == "appartement" %}selected{% endif %}>
+              Appartement
+            </option>
+
+            <option value="maison" {% if request.GET.type_bien == "maison" %}selected{% endif %}>
+              Maison
+            </option>
+
+            <option value="villa" {% if request.GET.type_bien == "villa" %}selected{% endif %}>
+              Villa
+            </option>
+
+            <option value="studio" {% if request.GET.type_bien == "studio" %}selected{% endif %}>
+              Studio
+            </option>
+          </select>
+        </div>
+
+        <div class="visitor-filter">
+          <label>Prix max</label>
+          <input 
+            type="number" 
+            name="prix_max" 
+            placeholder="Ex: 500000" 
+            value="{{ request.GET.prix_max }}"
+          >
+        </div>
+
+        <div class="visitor-filter">
+          <label>Surface min</label>
+          <input 
+            type="number" 
+            name="surface_min" 
+            placeholder="Ex: 60" 
+            value="{{ request.GET.surface_min }}"
+          >
+        </div>
+
+        <button type="submit" class="visitor-search-btn">
+          <i class="bx bx-search"></i> Rechercher
+        </button>
+
+      </div>
+
+    </form>
+
+    <!-- LISTE DES ANNONCES -->
+    <section class="visitor-grid">
+
+      {% for annonce in annonces %}
+
+      <article class="visitor-card">
+
+        <div class="visitor-card-img">
+          {% with photo=annonce.photos.first %}
+            {% if photo %}
+              <img src="{{ photo.image.url }}" alt="{{ annonce.titre }}">
+            {% else %}
+              <div class="visitor-no-img"><i class="bx bxs-home"></i></div>
+            {% endif %}
+          {% endwith %}
+        </div>
+
+        <div class="visitor-card-body">
+
+          <div class="visitor-card-title-row">
+            <h3>{{ annonce.titre }}</h3>
+            <span class="visitor-type">
+              {{ annonce.get_type_bien_display }}
+            </span>
+          </div>
+
+          <p class="visitor-location">
+            <i class="bx bxs-map"></i> {{ annonce.ville }}
+          </p>
+
+          <div class="visitor-price-row">
+            <strong>{{ annonce.prix|espace_milliers }} DH</strong>
+            <span><i class="bx bx-ruler"></i> {{ annonce.surface }} m²</span>
+          </div>
+
+          <a href="{% url 'properties:detail_annonce' annonce.pk %}" class="visitor-detail-btn">
+            Voir détails →
+          </a>
+
+        </div>
+
+      </article>
+
+      {% empty %}
+
+      <div class="visitor-empty">
+        <h3>Aucun logement trouvé</h3>
+        <p>Aucune annonce ne correspond à votre recherche.</p>
+
+        <a href="{% url 'dashboard:visitor_dashboard' %}">
+          Réinitialiser la recherche
+        </a>
+      </div>
+
+      {% endfor %}
+
+    </section>
+
+  </main>
+
+</div>
+
+{% endblock %}

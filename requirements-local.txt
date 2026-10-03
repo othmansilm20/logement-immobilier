@@ -1,0 +1,5 @@
+# Dependances supplementaires pour le developpement local sous Windows
+# avec SQL Server (non necessaires sur Render, qui utilise SQLite).
+-r requirements.txt
+mssql-django>=1.5
+pyodbc>=5.0

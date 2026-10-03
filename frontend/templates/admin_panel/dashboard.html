@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard Admin{% endblock %}
+
+{% block body %}
+
+<div class="admin-pro-layout">
+
+  {% include "includes/sidebar_admin.html" with active="dashboard" nb_attente=nb_attente %}
+
+  <main class="admin-pro-main">
+
+    <header class="admin-pro-topbar">
+      {% include "includes/user_profile_button.html" %}
+    </header>
+
+    <section class="admin-pro-content">
+
+      <h1 class="admin-pro-title">Tableau de bord Admin</h1>
+
+      <div class="admin-kpi-grid">
+
+        <div class="admin-kpi-card blue">
+          <div class="admin-kpi-icon"><i class="bx bx-group"></i></div>
+          <div>
+            <span>Total Utilisateurs</span>
+            <strong>{{ total_utilisateurs }}</strong>
+          </div>
+        </div>
+
+        <div class="admin-kpi-card green">
+          <div class="admin-kpi-icon"><i class="bx bxs-home"></i></div>
+          <div>
+            <span>Total Annonces</span>
+            <strong>{{ total_annonces }}</strong>
+          </div>
+        </div>
+
+        <div class="admin-kpi-card orange">
+          <div class="admin-kpi-icon">⏰</div>
+          <div>
+            <span>Annonces en attente</span>
+            <strong>{{ nb_attente }}</strong>
+          </div>
+        </div>
+
+        <div class="admin-kpi-card cyan">
+          <div class="admin-kpi-icon"><i class="bx bx-check-circle"></i></div>
+          <div>
+            <span>Annonces publiées</span>
+            <strong>{{ nb_publiees }}</strong>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="admin-table-card">
+
+        <div class="admin-card-header">
+          <h2><i class="bx bx-clipboard"></i> Annonces en attente de validation</h2>
+        </div>
+
+        <div class="admin-table dashboard">
+
+          <div class="admin-table-head">
+            <span>Annonce</span>
+            <span>Propriétaire</span>
+            <span>Ville</span>
+            <span>Date soumission</span>
+            <span>Actions</span>
+          </div>
+
+          {% for annonce in annonces_attente %}
+          <div class="admin-table-row">
+
+            <div class="app-table-item">
+              <div class="app-table-thumb">
+                {% with photo=annonce.photos.first %}
+                  {% if photo %}
+                    <img src="{{ photo.image.url }}" alt="{{ annonce.titre }}">
+                  {% else %}
+                    <i class="bx bxs-home"></i>
+                  {% endif %}
+                {% endwith %}
+              </div>
+
+              <div>
+                <strong>{{ annonce.titre }}</strong>
+                <small>{{ annonce.get_type_bien_display }}</small>
+              </div>
+            </div>
+
+            <div>
+              {{ annonce.proprietaire.get_full_name|default:annonce.proprietaire.username }}
+            </div>
+
+            <div>{{ annonce.ville|default:"Ville non renseignée" }}</div>
+
+            <div>
+              {% if annonce.date_soumission %}
+                {{ annonce.date_soumission|date:"d/m/Y à H:i" }}
+              {% else %}
+                {{ annonce.date_creation|date:"d/m/Y à H:i" }}
+              {% endif %}
+            </div>
+
+            <div class="admin-actions">
+
+              <form method="post"
+                    action="{% url 'dashboard:admin_approuver' annonce.pk %}"
+                    onsubmit="return confirm('Voulez-vous approuver cette annonce ?');">
+                {% csrf_token %}
+                <button type="submit" class="admin-btn approve">
+                  <i class="bx bx-check"></i> Approuver
+                </button>
+              </form>
+
+              <form method="post"
+                    action="{% url 'dashboard:admin_rejeter' annonce.pk %}"
+                    onsubmit="return confirm('Voulez-vous rejeter cette annonce ?');">
+                {% csrf_token %}
+                <button type="submit" class="admin-btn reject">
+                  <i class="bx bx-x"></i> Rejeter
+                </button>
+              </form>
+
+              <a href="{% url 'dashboard:admin_detail_annonce' annonce.pk %}?next=dashboard"
+                 class="admin-btn view">
+                <i class="bx bx-show"></i> Voir
+              </a>
+
+            </div>
+
+          </div>
+          {% empty %}
+          <div class="admin-empty">
+            Aucune annonce en attente de validation. <i class="bx bx-party"></i>
+          </div>
+          {% endfor %}
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+{% endblock %}

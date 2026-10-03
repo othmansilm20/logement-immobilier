@@ -1,0 +1,189 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logement Immobilier - Connexion</title>
+  <link rel="stylesheet" href="{% static 'css/landing.css' %}?v=20260518">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/dark-sidebar-fixes.css' %}?v=20260518-5">
+</head>
+<body>
+  <div class="site-loader" id="siteLoader">
+    <div class="loader-card">
+      <img src="{% static 'images/logo.png' %}" alt="Logement Immobilier" class="loader-logo">
+      <div class="loader-ring"></div>
+      <p>Chargement de votre espace immobilier...</p>
+    </div>
+  </div>
+
+  <main class="landing-page">
+    <section class="welcome-section">
+      <div class="welcome-content">
+        <a href="{% url 'accounts:accueil' %}" class="site-logo-link">
+          <img src="{% static 'images/logo.png' %}" alt="Logement Immobilier" class="welcome-logo">
+        </a>
+        <p class="welcome-kicker">Plateforme immobiliere moderne</p>
+        <h1>Bienvenue sur Logement Immobilier</h1>
+        <p class="welcome-text">
+          Trouvez, publiez et gerez vos annonces dans une interface simple,
+          elegante et adaptee aux visiteurs, proprietaires et administrateurs.
+        </p>
+        <a href="#access-section" class="welcome-btn">
+          Acceder au menu
+          <i class="fa-solid fa-arrow-down"></i>
+        </a>
+      </div>
+    </section>
+
+    <section class="access-section" id="access-section">
+  <div class="wrapper">
+    <form id="loginForm" method="post" action="{% url 'accounts:login' %}" {% if show_register %}style="display:none;"{% endif %}>
+    {% csrf_token %}
+        <div class="logo-container">
+           <a href="{% url 'accounts:accueil' %}" class="site-logo-link">
+             <img src="{% static 'images/logo.png' %}" alt="Logement Immobilier" class="main-logo">
+           </a>
+        </div>
+        
+        <h2>Connexion</h2>
+        {% if messages %}
+  <div class="messages-box">
+    {% for message in messages %}
+      <div class="message {{ message.tags }}">
+        {{ message }}
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<div class="input-field custom-dropdown">
+    <div class="dropdown-header" id="dropdownHeader">
+        <span id="selectedOption">
+          {% if role == "proprietaire" %}PROPRIÉTAIRE{% elif role == "admin" %}ADMIN{% else %}VISITEUR{% endif %}
+        </span>
+        <i class="fa-solid fa-chevron-down" style="font-size: 12px;"></i>
+    </div>
+    <ul class="dropdown-list" id="dropdownList">
+        <li data-value="visiteur">VISITEUR</li>
+        <li data-value="proprietaire">PROPRIÉTAIRE</li>
+        <li data-value="admin">ADMIN</li>
+    </ul>
+    <input type="hidden" name="role" id="userType" value="{{ role|default:'visiteur' }}">
+</div>
+
+        <div class="input-field">
+<input type="text" id="username" name="username" required>
+<label for="username">e-mail</label>
+        </div>
+
+        <div class="input-field">
+            <input type="password" id="password" name="password" required>
+            <label for="password">Mot de passe</label>
+        </div>
+
+        <div class="options-row" id="extraOptions">
+            <div class="remember">
+                <input type="checkbox" id="remember">
+                <label for="remember">Se souvenir de moi</label>
+            </div>
+            <a href="#" class="forgot-register-link">Mot de passe oublié ?</a>
+        </div>
+
+        <button type="submit" class="btn-connect">Se connecter</button>
+
+        <div class="register-link" id="registerLink">
+            <p>Vous n'avez pas de compte ? <a href="{% url 'accounts:register' %}" id="showRegister" class="forgot-register-link">S'inscrire</a></p>
+        </div>
+
+        <div class="demo-accounts-box">
+            <p class="demo-accounts-title"><i class="bx bx-key"></i> Comptes de démonstration</p>
+
+            <div class="demo-account-row">
+                <div class="demo-account-info">
+                    <strong>Visiteur</strong> — <span>youssef@example.com</span>
+                </div>
+                <button type="button" class="demo-fill-btn" data-role="visiteur" data-email="youssef@example.com" data-password="demo1234">Remplir</button>
+            </div>
+
+            <div class="demo-account-row">
+                <div class="demo-account-info">
+                    <strong>Propriétaire</strong> — <span>karim@example.com</span>
+                </div>
+                <button type="button" class="demo-fill-btn" data-role="proprietaire" data-email="karim@example.com" data-password="demo1234">Remplir</button>
+            </div>
+
+            <div class="demo-account-row">
+                <div class="demo-account-info">
+                    <strong>Admin</strong> — <span>admin@example.com</span>
+                </div>
+                <button type="button" class="demo-fill-btn" data-role="admin" data-email="admin@example.com" data-password="Admin1234">Remplir</button>
+            </div>
+        </div>
+    </form>
+        <form id="registerForm" method="post" action="{% url 'accounts:register' %}" {% if not show_register %}style="display: none;"{% endif %}>
+      {% csrf_token %}
+
+      <div class="logo-container">
+        <a href="{% url 'accounts:accueil' %}" class="site-logo-link">
+          <img src="{% static 'images/logo.png' %}" alt="Logement Immobilier" class="main-logo">
+        </a>
+      </div>
+
+      <h2>Inscription</h2>
+      <input type="hidden" name="role" id="registerRole" value="{{ role|default:'visiteur' }}">
+
+      <div class="input-field">
+        <input type="text" id="nom" name="nom" required>
+        <label for="nom">Nom</label>
+      </div>
+
+      <div class="input-field">
+        <input type="text" id="prenom" name="prenom" required>
+        <label for="prenom">Prénom</label>
+      </div>
+
+      <div class="input-field">
+        <input type="tel" id="telephone" name="telephone" required>
+        <label for="telephone">Téléphone</label>
+      </div>
+
+      <div class="input-field">
+        <input type="email" id="email" name="email" required autocomplete="off">
+        <label for="email">Email</label>
+      </div>
+
+      <div class="input-field">
+        <input type="password" id="password1" name="password1" required autocomplete="new-password">
+        <label for="password1">Mot de passe</label>
+      </div>
+
+      <div class="input-field">
+        <input type="password" id="password2" name="password2" required autocomplete="new-password">
+        <label for="password2">Ressaisir le mot de passe</label>
+      </div>
+
+      <button type="submit" class="btn-connect">S'inscrire</button>
+
+      <div class="register-link">
+        <p>Vous avez déjà un compte ?
+          <a href="{% url 'accounts:login' %}" id="showLogin" class="forgot-register-link">Se connecter</a>
+        </p>
+      </div>
+    </form>
+  </div>
+    </section>
+  </main>
+<button id="themeToggle" class="theme-toggle-btn" type="button" title="Changer le thème">
+  <i class="bx bx-moon"></i>
+</button>
+
+<script src="{% static 'js/main.js' %}?v=20260518"></script>
+<script src="{% static 'js/landing.js' %}?v=20260518-2"></script>
+  <footer class="main-footer">
+    <p>&copy; 2026 Logement Immobilier. Tous droits réservés.</p>
+</footer>
+</body>
+</html>

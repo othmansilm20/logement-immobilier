@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Mes demandes{% endblock %}
+
+{% block body %}
+
+<div class="visitor-requests-page">
+
+  <!-- TOPBAR -->
+  <div class="visitor-requests-topbar">
+    <a href="{% url 'accounts:accueil' %}" class="visitor-requests-brand site-logo-link">
+      <img src="{% static 'images/logo.png' %}" alt="Logement Immobilier" class="site-logo-img">
+    </a>
+
+    <div class="visitor-requests-brand">
+      <div class="brand-house">⌂</div>
+      <div>
+        <strong>Logement</strong>
+        <span>IMMOBILIER</span>
+      </div>
+    </div>
+
+    <div class="visitor-requests-nav">
+      <a href="{% url 'dashboard:visitor_dashboard' %}" class="visitor-nav-btn">
+        ← Retour aux annonces
+      </a>
+
+      <a href="{% url 'favorites:mes_favoris' %}" class="visitor-nav-btn">
+        <i class="bx bx-heart"></i> Mes favoris
+      </a>
+
+      {% include "includes/user_profile_button.html" %}
+    </div>
+
+  </div>
+
+  <!-- CONTENT -->
+  <div class="visitor-requests-content">
+
+    <!-- HEADER -->
+    <div class="visitor-requests-header">
+      <div>
+        <h1>Mes demandes de visite</h1>
+        <p>Suivez l’état de vos demandes envoyées aux propriétaires.</p>
+      </div>
+
+      <a href="{% url 'dashboard:visitor_dashboard' %}" class="new-search-btn">
+        Rechercher un logement
+      </a>
+    </div>
+
+
+
+    <!-- TABLE CARD -->
+    <div class="visitor-requests-card">
+
+      <div class="requests-card-head">
+        <h2>Historique des demandes</h2>
+        <span>{{ demandes|length }} demande(s)</span>
+      </div>
+
+      {% if demandes %}
+
+        <div class="visitor-requests-table">
+
+          <div class="requests-table-head">
+            <span>Annonce</span>
+            <span>Date</span>
+            <span>Votre message</span>
+            <span>Réponse propriétaire</span>
+            <span>Statut</span>
+            <span>Action</span>
+          </div>
+
+          {% for demande in demandes %}
+
+          <div class="requests-table-row">
+
+            <!-- ANNONCE -->
+            <div class="request-annonce-cell">
+              <div class="request-annonce-icon"><i class="bx bxs-home"></i></div>
+
+              <div>
+                <strong>{{ demande.annonce.titre }}</strong>
+                <span>{{ demande.annonce.ville }}</span>
+              </div>
+            </div>
+
+            <!-- DATE -->
+            <div class="request-date-cell">
+              <strong>{{ demande.date_demande|date:"d/m/Y" }}</strong>
+              <span>{{ demande.date_demande|date:"H:i" }}</span>
+            </div>
+
+            <!-- MESSAGE -->
+            <div class="request-message-cell">
+              {% if demande.message %}
+                {{ demande.message|truncatewords:14 }}
+              {% else %}
+                <span class="muted-text">Aucun message</span>
+              {% endif %}
+            </div>
+
+            <!-- REPONSE -->
+            <div class="request-response-cell">
+              {% if demande.reponse_proprietaire %}
+                <strong>{{ demande.reponse_proprietaire|truncatewords:14 }}</strong>
+
+                {% if demande.date_reponse %}
+                  <small>
+                    Répondu le {{ demande.date_reponse|date:"d/m/Y H:i" }}
+                  </small>
+                {% endif %}
+              {% else %}
+                <span class="muted-text">Pas encore de réponse</span>
+              {% endif %}
+            </div>
+
+            <!-- STATUT -->
+            <div class="request-status-cell">
+              {% if demande.statut == "en_attente" %}
+                <span class="request-status waiting">● En attente</span>
+              {% elif demande.statut == "acceptee" %}
+                <span class="request-status accepted">● Acceptée</span>
+              {% else %}
+                <span class="request-status refused">● Refusée</span>
+              {% endif %}
+            </div>
+
+            <!-- ACTION -->
+            <div class="request-action-cell">
+              <a href="{% url 'properties:detail_annonce' demande.annonce.pk %}" class="request-view-btn">
+                <i class="bx bx-show"></i> Voir
+              </a>
+            </div>
+
+          </div>
+
+          {% endfor %}
+
+        </div>
+
+      {% else %}
+
+        <div class="visitor-empty-requests">
+          <div class="empty-icon"><i class="bx bx-calendar"></i></div>
+          <h3>Aucune demande de visite</h3>
+          <p>Vous n’avez encore envoyé aucune demande. Consultez les annonces et demandez une visite.</p>
+
+          <a href="{% url 'dashboard:visitor_dashboard' %}">
+            Voir les annonces
+          </a>
+        </div>
+
+      {% endif %}
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,634 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Mes Annonces — Propriétaire{% endblock %}
+
+{% block body %}
+
+<style>
+/* ============================================================
+   PAGE MES ANNONCES PROPRIÉTAIRE - THÈME MODERNE
+   ============================================================ */
+
+.owner-dashboard-pro {
+  min-height: 100vh;
+  display: flex;
+  background: #f5f8fc !important;
+  font-family: "Inter", "Poppins", Arial, sans-serif;
+  color: #0f172a;
+}
+
+.owner-pro-main {
+  flex: 1;
+  min-width: 0;
+  background: #f5f8fc;
+}
+
+/* TOPBAR */
+.owner-pro-topbar {
+  height: 70px;
+  background: #fff;
+  border-bottom: 1px solid #e2e8f0;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px;
+}
+
+.owner-menu-btn {
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  cursor: pointer;
+  color: #0f172a;
+}
+
+.owner-top-user {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* CONTENT */
+.owner-pro-content {
+  padding: 26px 34px 40px;
+}
+
+.owner-page-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.owner-page-title h1 {
+  font-size: 34px;
+  margin: 0;
+  color: #0f172a;
+  font-weight: 800;
+}
+
+.owner-page-title p {
+  font-size: 16px;
+  color: #64748b;
+  margin-top: 6px;
+}
+
+.owner-add-main {
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 10px;
+  background: #0d6efd;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.owner-add-main:hover {
+  background: #0b5ed7;
+}
+
+/* KPI */
+.owner-pro-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+  margin-bottom: 22px;
+}
+
+.owner-pro-kpi {
+  min-height: 100px;
+  border-radius: 12px;
+  padding: 20px 22px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
+}
+
+.owner-pro-kpi.blue {
+  background: linear-gradient(135deg, #0d6efd, #0052cc);
+}
+
+.owner-pro-kpi.green {
+  background: linear-gradient(135deg, #16a34a, #0f9f5f);
+}
+
+.owner-pro-kpi.orange {
+  background: linear-gradient(135deg, #fb923c, #f59e0b);
+}
+
+.owner-pro-kpi.gray {
+  background: linear-gradient(135deg, #64748b, #94a3b8);
+}
+
+.owner-pro-kpi-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #fff;
+  color: #0d6efd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  flex-shrink: 0;
+}
+
+.owner-pro-kpi span {
+  font-size: 15px;
+  opacity: 0.95;
+}
+
+.owner-pro-kpi strong {
+  display: block;
+  font-size: 34px;
+  line-height: 1;
+  margin-top: 4px;
+}
+
+.kpi-bg-icon {
+  position: absolute;
+  right: 20px;
+  bottom: 8px;
+  font-size: 54px;
+  opacity: 0.16;
+}
+
+/* CARD TABLE */
+.owner-pro-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.07);
+  margin-top: 18px;
+  overflow: hidden;
+}
+
+.owner-pro-card-header {
+  height: 56px;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.owner-pro-card-header h2 {
+  font-size: 20px;
+  margin: 0;
+  color: #0f172a;
+}
+
+.owner-pro-card-header span {
+  font-size: 14px;
+  color: #64748b;
+}
+
+/* TABLE */
+.owner-pro-table {
+  width: 100%;
+}
+
+.owner-pro-table-head,
+.owner-pro-table-row {
+  display: grid;
+  grid-template-columns: 90px 2.2fr 1.2fr 1.2fr 1fr 1.1fr 1.8fr;
+  align-items: center;
+  column-gap: 16px;
+}
+
+.owner-pro-table-head {
+  background: #f8fafc;
+  padding: 13px 16px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #334155;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.owner-pro-table-row {
+  padding: 9px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  color: #0f172a;
+  font-size: 14px;
+}
+
+.owner-pro-table-row:last-child {
+  border-bottom: none;
+}
+
+.owner-pro-img {
+  width: 72px;
+  height: 44px;
+  border-radius: 6px;
+  background: #eef2f7;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.owner-pro-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.owner-pro-title {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* STATUS */
+.owner-pro-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.owner-pro-status.published {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.owner-pro-status.waiting {
+  background: #ffedd5;
+  color: #ea580c;
+}
+
+.owner-pro-status.draft {
+  background: #e5e7eb;
+  color: #475569;
+}
+
+.owner-pro-status.rejected {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* ACTIONS */
+.owner-pro-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.owner-pro-action {
+  height: 34px;
+  min-width: 44px;
+  border-radius: 7px;
+  border: 1px solid #93c5fd;
+  color: #0d6efd;
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.owner-pro-action:hover {
+  background: #eff6ff;
+}
+
+.owner-pro-action.delete {
+  border-color: #fecaca;
+  color: #ef4444;
+}
+
+.owner-pro-action.delete:hover {
+  background: #fff1f2;
+}
+
+.owner-pro-action.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.owner-pro-actions form {
+  margin: 0;
+}
+
+/* FOOTER */
+.owner-pro-table-footer {
+  height: 56px;
+  padding: 0 18px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #64748b;
+}
+
+.owner-pro-empty {
+  padding: 38px;
+  text-align: center;
+  color: #64748b;
+}
+
+.owner-pro-empty a {
+  color: #0d6efd;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .owner-pro-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Empilement des lignes du tableau au lieu d'un defilement horizontal
+     force : plus lisible sur tablette/mobile. */
+  .owner-pro-table {
+    overflow-x: visible;
+  }
+
+  .owner-pro-table-head {
+    display: none;
+  }
+
+  .owner-pro-table-head,
+  .owner-pro-table-row {
+    min-width: 0;
+  }
+
+  .owner-pro-table-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 12px;
+    padding: 14px 16px;
+  }
+
+  .owner-pro-img {
+    width: 64px;
+    height: 64px;
+  }
+
+  .owner-pro-title {
+    flex: 1;
+    min-width: 120px;
+  }
+
+  .owner-pro-table-row > div:nth-child(3),
+  .owner-pro-table-row > div:nth-child(4),
+  .owner-pro-table-row > div:nth-child(5) {
+    font-size: 13px;
+    color: #64748b;
+  }
+
+  .owner-pro-actions {
+    flex-basis: 100%;
+    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 850px) {
+  .owner-pro-content {
+    padding: 20px;
+  }
+
+  .owner-pro-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .owner-page-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 560px) {
+  .owner-pro-kpi {
+    min-height: 0;
+    padding: 14px 16px;
+    gap: 14px;
+  }
+
+  .owner-pro-kpi-icon {
+    width: 42px;
+    height: 42px;
+    font-size: 19px;
+  }
+
+  .owner-pro-kpi span {
+    font-size: 13px;
+  }
+
+  .owner-pro-kpi strong {
+    font-size: 24px;
+  }
+
+  .kpi-bg-icon {
+    font-size: 36px;
+  }
+
+  .owner-pro-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    padding: 14px 16px;
+    gap: 4px;
+  }
+}
+</style>
+
+<div class="owner-dashboard-pro">
+
+  {% include "includes/sidebar_owner.html" with active="annonces" %}
+
+  <main class="owner-pro-main">
+
+    <!-- TOPBAR -->
+    <header class="owner-pro-topbar">
+
+      <button class="owner-menu-btn"><i class="bx bx-menu"></i></button>
+
+      {% include "includes/user_profile_button.html" %}
+
+    </header>
+
+    <!-- CONTENT -->
+    <section class="owner-pro-content">
+
+      <div class="owner-page-title">
+        <div>
+          <h1>Mes Annonces</h1>
+          <p>Gérez et suivez vos annonces immobilières</p>
+        </div>
+
+        <a href="{% url 'properties:creer_annonce' %}" class="owner-add-main">
+          + Nouvelle annonce
+        </a>
+      </div>
+
+      <!-- KPI -->
+      <div class="owner-pro-kpi-grid">
+
+        <div class="owner-pro-kpi blue">
+          <div class="owner-pro-kpi-icon"><i class="bx bx-building"></i></div>
+          <div>
+            <span>Total annonces</span>
+            <strong>{{ total }}</strong>
+          </div>
+          <div class="kpi-bg-icon"><i class="bx bx-buildings"></i></div>
+        </div>
+
+        <div class="owner-pro-kpi green">
+          <div class="owner-pro-kpi-icon"><i class="bx bx-check"></i></div>
+          <div>
+            <span>Publiées</span>
+            <strong>{{ publiees }}</strong>
+          </div>
+          <div class="kpi-bg-icon"><i class="bx bx-buildings"></i></div>
+        </div>
+
+        <div class="owner-pro-kpi orange">
+          <div class="owner-pro-kpi-icon">⏱</div>
+          <div>
+            <span>En attente</span>
+            <strong>{{ en_attente }}</strong>
+          </div>
+          <div class="kpi-bg-icon">⌛</div>
+        </div>
+
+        <div class="owner-pro-kpi gray">
+          <div class="owner-pro-kpi-icon"><i class="bx bx-file"></i></div>
+          <div>
+            <span>Brouillons</span>
+            <strong>{{ brouillons }}</strong>
+          </div>
+          <div class="kpi-bg-icon"><i class="bx bx-list-ul"></i></div>
+        </div>
+
+      </div>
+
+      <!-- TABLE -->
+      <div class="owner-pro-card">
+
+        <div class="owner-pro-card-header">
+          <h2><i class="bx bx-list-ul"></i> Mes annonces</h2>
+          <span>{{ total }} annonce{% if total > 1 %}s{% endif %} au total</span>
+        </div>
+
+        <div class="owner-pro-table">
+
+          <div class="owner-pro-table-head">
+            <span>Image</span>
+            <span>Titre</span>
+            <span>Ville</span>
+            <span>Prix</span>
+            <span>Surface</span>
+            <span>Statut</span>
+            <span>Actions</span>
+          </div>
+
+          {% for annonce in annonces %}
+            <div class="owner-pro-table-row">
+
+              <div class="owner-pro-img">
+                {% with photo=annonce.photos.first %}
+                  {% if photo %}
+                    <img src="{{ photo.image.url }}" alt="{{ annonce.titre }}">
+                  {% else %}
+                    <i class="bx bxs-home"></i>
+                  {% endif %}
+                {% endwith %}
+              </div>
+
+              <div class="owner-pro-title">
+                {{ annonce.titre }}
+              </div>
+
+              <div>{{ annonce.ville }}</div>
+
+              <div>{{ annonce.prix|floatformat:0 }} DH</div>
+
+              <div>{{ annonce.surface }} m²</div>
+
+              <div>
+                {% if annonce.statut == "publiee" %}
+                  <span class="owner-pro-status published">Publiée</span>
+                {% elif annonce.statut == "en_attente" %}
+                  <span class="owner-pro-status waiting">En attente</span>
+                {% elif annonce.statut == "brouillon" %}
+                  <span class="owner-pro-status draft">Brouillon</span>
+                {% elif annonce.statut == "rejetee" %}
+                  <span class="owner-pro-status rejected">Rejetée</span>
+                {% else %}
+                  <span class="owner-pro-status draft">{{ annonce.statut }}</span>
+                {% endif %}
+              </div>
+
+              <div class="owner-pro-actions">
+
+                {% if annonce.statut == "brouillon" %}
+                  <a href="{% url 'properties:modifier_annonce' annonce.pk %}"
+                     class="owner-pro-action"
+                     title="Modifier">
+                    <i class="bx bx-pencil"></i>
+                  </a>
+                {% else %}
+                  <span class="owner-pro-action disabled" title="Modification impossible">
+                    <i class="bx bx-pencil"></i>
+                  </span>
+                {% endif %}
+
+                <a href="{% url 'properties:supprimer_annonce' annonce.pk %}"
+                   class="owner-pro-action delete"
+                   title="Supprimer"
+                   onclick="return confirm('Supprimer cette annonce ?')">
+                  <i class="bx bx-trash"></i>
+                </a>
+
+                <a href="{% url 'properties:detail_annonce_owner' annonce.pk %}"
+                   class="owner-pro-action"
+                   title="Voir">
+                  <i class="bx bx-show"></i>
+                </a>
+
+              </div>
+
+            </div>
+          {% empty %}
+
+            <div class="owner-pro-empty">
+              Aucune annonce pour le moment.
+              <a href="{% url 'properties:creer_annonce' %}">
+                Créer votre première annonce
+              </a>
+            </div>
+
+          {% endfor %}
+
+        </div>
+
+        <div class="owner-pro-table-footer">
+          <span>Affichage de vos annonces</span>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+{% endblock %}

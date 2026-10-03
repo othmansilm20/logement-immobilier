@@ -1,0 +1,23 @@
+# Environnement virtuel
+env/
+venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# Django
+db.sqlite3
+staticfiles/
+django-runserver.log
+django-runserver.err.log
+
+# Uploads utilisateurs (les photos de demo dans media/annonces/ restent versionnees)
+media/profiles/
+
+# IDE / OS
+.vscode/
+.idea/
+.claude/
+.DS_Store
+Thumbs.db

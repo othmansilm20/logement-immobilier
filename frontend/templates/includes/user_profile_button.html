@@ -1,0 +1,55 @@
+{% if request.user.is_authenticated %}
+<div class="global-user-menu">
+
+  <button class="global-user-btn" type="button" onclick="this.parentElement.classList.toggle('open')">
+    <div class="global-user-avatar">
+      {% if request.user.profile.photo %}
+        <img src="{{ request.user.profile.photo.url }}" alt="Photo de profil" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+      {% else %}
+        <i class="bx bxs-user"></i>
+      {% endif %}
+    </div>
+
+    <div class="global-user-text">
+      <strong>{{ request.user.get_full_name|default:request.user.username }}</strong>
+
+      {% if request.user.is_superuser or request.user.is_staff %}
+        <span>Admin</span>
+      {% elif request.user.profile.role == "proprietaire" %}
+        <span>Propriétaire</span>
+      {% else %}
+        <span>Visiteur</span>
+      {% endif %}
+    </div>
+
+    <span class="global-arrow">⌄</span>
+  </button>
+
+  <div class="global-user-dropdown">
+
+    {% if request.user.is_superuser or request.user.is_staff %}
+      <a href="{% url 'dashboard:profil_admin' %}"><i class="bx bxs-user"></i> Mon Profil</a>
+    {% elif request.user.profile.role == "proprietaire" %}
+      <a href="{% url 'accounts:profil_proprietaire' %}"><i class="bx bxs-user"></i> Mon Profil</a>
+    {% else %}
+      <a href="{% url 'accounts:profil_visiteur' %}"><i class="bx bxs-user"></i> Mon Profil</a>
+    {% endif %}
+
+    <div class="global-menu-separator"></div>
+
+    <a href="{% url 'accounts:logout' %}" class="logout-link"><i class="bx bx-log-out"></i> Déconnexion</a>
+
+  </div>
+
+</div>
+
+<script>
+document.addEventListener("click", function(event) {
+  document.querySelectorAll(".global-user-menu.open").forEach(function(menu) {
+    if (!menu.contains(event.target)) {
+      menu.classList.remove("open");
+    }
+  });
+});
+</script>
+{% endif %}

@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Toutes les annonces{% endblock %}
+
+{% block body %}
+
+<div class="admin-pro-layout">
+
+  {% include "includes/sidebar_admin.html" with active="toutes_annonces" %}
+
+  <main class="admin-pro-main">
+
+    <header class="admin-pro-topbar">
+      {% include "includes/user_profile_button.html" %}
+    </header>
+
+    <section class="admin-pro-content">
+
+      <div class="admin-pro-heading">
+        <div>
+          <h1 class="admin-pro-title">Toutes les annonces</h1>
+          <p class="admin-pro-sub">{{ total_annonces }} annonces au total</p>
+        </div>
+      </div>
+
+      <div class="admin-all-card">
+
+        <form method="get" class="admin-pro-filter annonces">
+
+          <input type="text" name="q" placeholder="Titre, ville, propriétaire..." value="{{ request.GET.q }}">
+
+          <select name="statut">
+            <option value="">Tous les statuts</option>
+            <option value="brouillon" {% if request.GET.statut == "brouillon" %}selected{% endif %}>Brouillon</option>
+            <option value="en_attente" {% if request.GET.statut == "en_attente" %}selected{% endif %}>En attente</option>
+            <option value="publiee" {% if request.GET.statut == "publiee" %}selected{% endif %}>Publiée</option>
+            <option value="rejetee" {% if request.GET.statut == "rejetee" %}selected{% endif %}>Rejetée</option>
+            <option value="archivee" {% if request.GET.statut == "archivee" %}selected{% endif %}>Archivée</option>
+          </select>
+
+          <select name="ville">
+            <option value="">Toutes les villes</option>
+            {% for v in villes %}
+              <option value="{{ v }}" {% if request.GET.ville == v %}selected{% endif %}>{{ v }}</option>
+            {% endfor %}
+          </select>
+
+          <select name="type_bien">
+            <option value="">Tous les types</option>
+            <option value="appartement" {% if request.GET.type_bien == "appartement" %}selected{% endif %}>Appartement</option>
+            <option value="maison" {% if request.GET.type_bien == "maison" %}selected{% endif %}>Maison</option>
+            <option value="villa" {% if request.GET.type_bien == "villa" %}selected{% endif %}>Villa</option>
+            <option value="studio" {% if request.GET.type_bien == "studio" %}selected{% endif %}>Studio</option>
+          </select>
+
+          <select name="tri" onchange="this.form.submit()">
+            <option value="recente" {% if request.GET.tri != "ancienne" %}selected{% endif %}>Plus récentes</option>
+            <option value="ancienne" {% if request.GET.tri == "ancienne" %}selected{% endif %}>Plus anciennes</option>
+          </select>
+
+          <button type="submit" class="admin-btn view">Filtrer</button>
+
+          <a href="{% url 'dashboard:admin_annonces' %}" class="admin-btn secondary">
+            Réinitialiser
+          </a>
+
+        </form>
+
+        <div class="admin-all-table">
+
+          <div class="admin-all-head">
+            <span>Image</span>
+            <span>Titre</span>
+            <span>Propriétaire</span>
+            <span>Ville</span>
+            <span>Type</span>
+            <span>Prix</span>
+            <span>Surface</span>
+            <span>Statut</span>
+            <span>Actions</span>
+          </div>
+
+          {% for annonce in annonces %}
+          <div class="admin-all-row">
+
+            <div class="admin-all-img">
+              {% with photo=annonce.photos.first %}
+                {% if photo %}
+                  <img src="{{ photo.image.url }}" alt="{{ annonce.titre }}">
+                {% else %}
+                  <i class="bx bxs-home"></i>
+                {% endif %}
+              {% endwith %}
+            </div>
+
+            <div>
+              <strong>{{ annonce.titre }}</strong>
+            </div>
+
+            <div>
+              <strong>{{ annonce.proprietaire.get_full_name|default:annonce.proprietaire.username }}</strong>
+              <small>{{ annonce.proprietaire.email|default:"Email non renseigné" }}</small>
+            </div>
+
+            <div>{{ annonce.ville|default:"-" }}</div>
+            <div>{{ annonce.get_type_bien_display }}</div>
+            <div>{{ annonce.prix }} MAD</div>
+            <div>{{ annonce.surface }} m²</div>
+
+            <div>
+              {% if annonce.statut == "publiee" %}
+                <span class="status-user active">Publiée</span>
+              {% elif annonce.statut == "en_attente" %}
+                <span class="status-user pending">En attente</span>
+              {% elif annonce.statut == "archivee" %}
+                <span class="status-user archived">Archivée</span>
+              {% elif annonce.statut == "rejetee" %}
+                <span class="status-user inactive">Rejetée</span>
+              {% else %}
+                <span class="status-user draft">Brouillon</span>
+              {% endif %}
+            </div>
+
+            <div class="admin-user-actions">
+
+              <a href="{% url 'dashboard:admin_detail_annonce' annonce.pk %}" title="Voir">
+                <i class="bx bx-show"></i>
+              </a>
+
+              <a href="{% url 'dashboard:admin_modifier_annonce' annonce.pk %}" title="Modifier">
+                <i class="bx bx-pencil"></i>
+              </a>
+
+              <form method="post"
+                    action="{% url 'dashboard:admin_supprimer_annonce' annonce.pk %}"
+                    onsubmit="return confirm('Voulez-vous vraiment supprimer cette annonce ?');">
+                {% csrf_token %}
+                <button type="submit" class="delete" title="Supprimer"><i class="bx bx-trash"></i></button>
+              </form>
+
+            </div>
+
+          </div>
+          {% empty %}
+          <div class="admin-empty">
+            Aucune annonce trouvée.
+          </div>
+          {% endfor %}
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+{% endblock %}

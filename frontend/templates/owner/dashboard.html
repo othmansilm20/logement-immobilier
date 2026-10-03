@@ -1,0 +1,271 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard Propriétaire{% endblock %}
+
+{% block body %}
+
+<div class="owner-dashboard-pro">
+
+  {% include "includes/sidebar_owner.html" with active="dashboard" %}
+
+  <main class="owner-pro-main">
+
+    <!-- TOPBAR -->
+    <header class="owner-pro-topbar">
+
+      <div class="owner-search-box">
+        <span><i class="bx bx-search"></i></span>
+        <input type="text" placeholder="Rechercher une annonce, une ville, un quartier...">
+      </div>
+
+      <div class="owner-top-user">
+
+  <a href="{% url 'visits:demandes_visite' %}" class="owner-bell">
+    <i class="bx bx-bell"></i>
+
+    {% if nb_notifications > 0 %}
+      <span>{{ nb_notifications }}</span>
+    {% endif %}
+  </a>
+
+  {% include "includes/user_profile_button.html" %}
+
+</div>
+
+    </header>
+
+    <!-- CONTENT -->
+    <section class="owner-pro-content">
+
+      <div class="owner-welcome-header">
+        <h1>Mon Tableau de bord</h1>
+
+        <div class="owner-alert-info">
+          <i class="bx bx-happy"></i> Bienvenue, {{ request.user.get_full_name|default:request.user.username }} !
+          Vous avez <strong>{{ publiees }} annonces publiées.</strong>
+        </div>
+      </div>
+
+      <!-- KPI -->
+      <div class="owner-pro-kpi-grid">
+
+        <div class="owner-pro-kpi blue">
+          <div class="owner-pro-kpi-icon"><i class="bx bx-building"></i></div>
+          <div>
+            <span>Total annonces</span>
+            <strong>{{ total }}</strong>
+          </div>
+          <div class="kpi-bg-icon"><i class="bx bx-buildings"></i></div>
+        </div>
+
+        <div class="owner-pro-kpi green">
+          <div class="owner-pro-kpi-icon"><i class="bx bx-check"></i></div>
+          <div>
+            <span>Annonces publiées</span>
+            <strong>{{ publiees }}</strong>
+          </div>
+          <div class="kpi-bg-icon"><i class="bx bx-buildings"></i></div>
+        </div>
+
+        <div class="owner-pro-kpi orange">
+          <div class="owner-pro-kpi-icon">⏱</div>
+          <div>
+            <span>En attente de validation</span>
+            <strong>{{ en_attente }}</strong>
+          </div>
+          <div class="kpi-bg-icon">⌛</div>
+        </div>
+
+        <div class="owner-pro-kpi gray">
+          <div class="owner-pro-kpi-icon"><i class="bx bx-file"></i></div>
+          <div>
+            <span>Brouillons</span>
+            <strong>{{ brouillons }}</strong>
+          </div>
+          <div class="kpi-bg-icon"><i class="bx bx-list-ul"></i></div>
+        </div>
+
+      </div>
+
+      <!-- MES ANNONCES -->
+      <div class="owner-pro-card">
+
+        <div class="owner-pro-card-header">
+          <h2><i class="bx bx-list-ul"></i> Mes annonces</h2>
+
+          <a href="{% url 'properties:creer_annonce' %}" class="owner-add-small">
+            + Créer une annonce
+          </a>
+        </div>
+
+        <div class="owner-pro-table">
+
+          <div class="owner-pro-table-head">
+            <span>Image</span>
+            <span>Titre</span>
+            <span>Ville</span>
+            <span>Prix</span>
+            <span>Surface</span>
+            <span>Statut</span>
+            <span>Actions</span>
+          </div>
+
+          {% for annonce in dernieres_annonces %}
+            <div class="owner-pro-table-row">
+
+              <div class="owner-pro-img">
+                {% with photo=annonce.photos.first %}
+                  {% if photo %}
+                    <img src="{{ photo.image.url }}" alt="{{ annonce.titre }}">
+                  {% else %}
+                    <i class="bx bxs-home"></i>
+                  {% endif %}
+                {% endwith %}
+              </div>
+
+              <div class="owner-pro-title">
+                {{ annonce.titre }}
+              </div>
+
+              <div>{{ annonce.ville }}</div>
+
+              <div>{{ annonce.prix|floatformat:0 }} DH</div>
+
+              <div>{{ annonce.surface }} m²</div>
+
+              <div>
+                {% if annonce.statut == "publiee" %}
+                  <span class="owner-pro-status published">Publiée</span>
+                {% elif annonce.statut == "en_attente" %}
+                  <span class="owner-pro-status waiting">En attente</span>
+                {% elif annonce.statut == "brouillon" %}
+                  <span class="owner-pro-status draft">Brouillon</span>
+                {% elif annonce.statut == "rejetee" %}
+                  <span class="owner-pro-status rejected">Rejetée</span>
+                {% else %}
+                  <span class="owner-pro-status draft">{{ annonce.statut }}</span>
+                {% endif %}
+              </div>
+
+              <div class="owner-pro-actions">
+
+                {% if annonce.statut == "brouillon" %}
+                  <a href="{% url 'properties:modifier_annonce' annonce.pk %}"
+                     class="owner-pro-action edit"
+                     title="Modifier">
+                    <i class="bx bx-pencil"></i>
+                  </a>
+                {% else %}
+                  <span class="owner-pro-action disabled" title="Modification impossible">
+                    <i class="bx bx-pencil"></i>
+                  </span>
+                {% endif %}
+
+                <a href="{% url 'properties:detail_annonce_owner' annonce.pk %}"
+                   class="owner-pro-action view"
+                   title="Voir">
+                  <i class="bx bx-show"></i>
+                </a>
+
+              </div>
+
+            </div>
+          {% empty %}
+
+            <div class="owner-pro-empty">
+              Vous n’avez encore aucune annonce.
+              <a href="{% url 'properties:creer_annonce' %}">
+                Créer votre première annonce
+              </a>
+            </div>
+
+          {% endfor %}
+
+        </div>
+
+        <div class="owner-pro-table-footer">
+          <span>Affichage de vos dernières annonces</span>
+
+          <a href="{% url 'properties:mes_annonces' %}" class="owner-view-all-pro">
+            Voir toutes mes annonces →
+          </a>
+        </div>
+
+      </div>
+
+      <!-- DEMANDES DE VISITE RÉCENTES -->
+      <div class="owner-pro-card owner-requests-card">
+
+  <div class="owner-pro-card-header">
+    <h2><i class="bx bx-calendar"></i> Demandes de visite récentes</h2>
+
+    <a href="{% url 'visits:demandes_visite' %}" class="owner-view-all-pro">
+      Voir toutes les demandes →
+    </a>
+  </div>
+
+  <div class="owner-request-grid">
+
+    {% for demande in demandes_recentes %}
+      <div class="owner-request-box real-request">
+
+        <div class="request-avatar">
+          <i class="bx bxs-user"></i>
+        </div>
+
+        <div class="request-content">
+          <h3>{{ demande.visiteur.get_full_name|default:demande.visiteur.username }}</h3>
+
+          <a href="{% url 'properties:detail_annonce_owner' demande.annonce.pk %}" class="request-property">
+            {{ demande.annonce.titre }}
+          </a>
+
+          <div class="request-meta">
+            <span><i class="bx bx-calendar"></i> {{ demande.date_demande|date:"d/m/Y" }}</span>
+            <span><i class="bx bx-time"></i> {{ demande.date_demande|date:"H:i" }}</span>
+          </div>
+
+          {% if demande.statut == "en_attente" %}
+            <span class="request-status waiting">En attente</span>
+          {% elif demande.statut == "acceptee" %}
+            <span class="request-status accepted">Confirmée</span>
+          {% else %}
+            <span class="request-status refused">Refusée</span>
+          {% endif %}
+
+          {% if demande.statut == "en_attente" %}
+            <div class="request-actions-row">
+              <form method="post" action="{% url 'visits:accepter_demande' demande.pk %}">
+                {% csrf_token %}
+                <input type="hidden" name="reponse_proprietaire" value="Votre demande de visite a été acceptée.">
+                <button type="submit" class="request-btn accept"><i class="bx bx-check"></i> Accepter</button>
+              </form>
+
+              <form method="post" action="{% url 'visits:refuser_demande' demande.pk %}">
+                {% csrf_token %}
+                <input type="hidden" name="reponse_proprietaire" value="Votre demande de visite a été refusée.">
+                <button type="submit" class="request-btn refuse"><i class="bx bx-x"></i> Refuser</button>
+              </form>
+            </div>
+          {% endif %}
+        </div>
+
+      </div>
+    {% empty %}
+      <div class="owner-request-empty">
+        Aucune demande de visite récente.
+      </div>
+    {% endfor %}
+
+  </div>
+
+</div>
+
+    </section>
+
+  </main>
+
+</div>
+
+{% endblock %}

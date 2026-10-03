@@ -1,0 +1,887 @@
+{% extends "base.html" %}
+{% load static %}
+{% load format_filters %}
+
+{% block title %}{{ annonce.titre }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+
+<style>
+/* ===============================
+   DETAIL ANNONCE VISITEUR
+   Layout comme l'image envoyée
+================================ */
+
+.visitor-detail-page {
+  min-height: 100vh;
+  background: #f6f8fc;
+  color: #111827;
+  font-family: "Poppins", "Inter", sans-serif;
+}
+
+/* TOPBAR */
+.visitor-detail-topbar {
+  height: 72px;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 5px 18px rgba(15, 23, 42, 0.06);
+  display: grid;
+  grid-template-columns: 240px 1fr auto;
+  align-items: center;
+  gap: 22px;
+  padding: 0 56px;
+}
+
+.visitor-detail-brand {
+  color: #1e3a8a;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  position: relative;
+  padding-left: 52px;
+  line-height: 1;
+  border-right: 1px solid #e5e7eb;
+  height: 48px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.visitor-detail-brand::before {
+  content: "⌂";
+  position: absolute;
+  left: 0;
+  top: 3px;
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, #3155d4, #1e3a8a);
+  color: white;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 23px;
+}
+
+.visitor-detail-brand span {
+  display: block;
+  font-size: 10px;
+  color: #3155d4;
+  letter-spacing: 4px;
+  margin-top: 4px;
+}
+
+.visitor-back-link {
+  color: #374151;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  width: fit-content;
+}
+
+.visitor-back-link:hover {
+  color: #3155d4;
+}
+
+.visitor-profile-zone {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* MAIN GRID */
+.visitor-detail-wrapper {
+  padding: 18px 56px 35px;
+}
+
+.visitor-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 410px;
+  gap: 28px;
+  align-items: start;
+}
+
+.visitor-left-card,
+.visitor-side-card,
+.visitor-similar-section {
+  background: white;
+  border: 1px solid #e8edf5;
+  border-radius: 10px;
+  box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+}
+
+.visitor-left-card {
+  overflow: hidden;
+}
+
+/* GRANDE PHOTO */
+.visitor-main-photo {
+  height: 430px;
+  position: relative;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+
+.visitor-main-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.visitor-no-photo {
+  height: 100%;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+}
+
+/* BUTTON FAVORI SUR IMAGE */
+.visitor-heart-top {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 46px;
+  height: 46px;
+  background: rgba(255,255,255,0.94);
+  color: #3155d4;
+  border-radius: 50%;
+  text-decoration: none;
+  font-size: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.18);
+  transition: 0.2s ease;
+  z-index: 5;
+}
+
+.visitor-heart-top:hover {
+  background: #3155d4;
+  color: white;
+  transform: scale(1.06);
+}
+
+/* MINIATURES */
+.visitor-thumbs-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  padding: 12px 22px 0;
+}
+
+.visitor-thumb {
+  height: 105px;
+  border: 3px solid transparent;
+  border-radius: 7px;
+  overflow: hidden;
+  background: #f1f5f9;
+  padding: 0;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.visitor-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.visitor-thumb.active {
+  border-color: #3155d4;
+}
+
+.visitor-thumb:hover {
+  transform: translateY(-2px);
+}
+
+.visitor-thumb-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+/* INFOS SOUS PHOTOS */
+.visitor-detail-info {
+  padding: 14px 22px 22px;
+}
+
+.visitor-detail-info h1 {
+  margin: 0 0 16px;
+  color: #111827;
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.visitor-main-specs {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.visitor-spec-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.visitor-spec-icon {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+}
+
+.visitor-spec-item strong {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.visitor-description {
+  color: #1f2937;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+/* RIGHT SIDE */
+.visitor-right-column {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  position: sticky;
+  top: 90px;
+}
+
+.visitor-side-card {
+  padding: 18px;
+}
+
+.visitor-side-card h2 {
+  margin: 0 0 15px;
+  color: #111827;
+  font-size: 22px;
+  font-weight: 700;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+/* DETAILS DU BIEN */
+.visitor-detail-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.visitor-detail-line {
+  display: grid;
+  grid-template-columns: 145px 1fr;
+  gap: 12px;
+  align-items: center;
+  font-size: 14px;
+}
+
+.visitor-detail-line span {
+  color: #374151;
+}
+
+.visitor-detail-line strong {
+  color: #111827;
+  font-weight: 500;
+}
+
+.visitor-status {
+  width: fit-content;
+  background: #bbf7d0;
+  color: #15803d !important;
+  padding: 5px 12px;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 700 !important;
+}
+
+/* MAP */
+#map-visitor {
+  height: 245px;
+  width: 100%;
+  border-radius: 7px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+/* OWNER */
+.visitor-owner-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.visitor-owner-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #111827;
+  font-size: 14px;
+}
+
+.visitor-owner-line span {
+  width: 22px;
+  text-align: center;
+}
+
+.visitor-owner-line strong {
+  font-weight: 500;
+}
+
+/* ACTIONS */
+.visitor-actions-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.visitor-action-btn {
+  height: 58px;
+  border-radius: 7px;
+  text-decoration: none;
+  border: 1px solid #3155d4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 15px;
+  transition: 0.2s ease;
+}
+
+.visitor-action-btn.visit {
+  background: #3155d4;
+  color: white;
+  box-shadow: 0 10px 18px rgba(47, 85, 212, 0.28);
+}
+
+.visitor-action-btn.visit:hover {
+  background: #2446b8;
+}
+
+.visitor-action-btn.save {
+  background: white;
+  color: #3155d4;
+}
+
+.visitor-action-btn.save:hover {
+  background: #eff6ff;
+}
+
+.visitor-report-btn {
+  height: 45px;
+  background: #fff7ed;
+  color: #c2410c;
+  border: 1px solid #fed7aa;
+  border-radius: 7px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+.visitor-report-btn:hover {
+  background: #ffedd5;
+}
+
+/* BIENS SIMILAIRES */
+.visitor-similar-section {
+  margin-top: 14px;
+  padding: 10px 14px 14px;
+}
+
+.visitor-similar-section h2 {
+  margin: 0 0 12px;
+  color: #111827;
+  font-size: 22px;
+  font-weight: 700;
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.visitor-similar-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.visitor-similar-card {
+  height: 112px;
+  border: 1px solid #e5e7eb;
+  border-radius: 7px;
+  display: grid;
+  grid-template-columns: 150px 1fr 48px;
+  background: white;
+  overflow: hidden;
+}
+
+.visitor-similar-img {
+  background: #e5e7eb;
+  display: block;
+  height: 100%;
+  color: #64748b;
+  text-decoration: none;
+}
+
+.visitor-similar-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.visitor-similar-empty-img {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.visitor-similar-body {
+  padding: 9px 10px;
+  min-width: 0;
+}
+
+.visitor-similar-body a {
+  text-decoration: none;
+}
+
+.visitor-similar-body h3 {
+  margin: 0 0 4px;
+  color: #111827;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.visitor-similar-body p {
+  margin: 0 0 2px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.visitor-similar-body span {
+  display: block;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.visitor-similar-body strong {
+  display: block;
+  color: #3155d4;
+  font-size: 15px;
+  margin-top: 4px;
+}
+
+.visitor-similar-heart {
+  color: #64748b;
+  text-decoration: none;
+  font-size: 32px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 8px;
+  transition: 0.2s ease;
+}
+
+.visitor-similar-heart:hover {
+  color: #e11d48;
+}
+
+.visitor-empty-message {
+  color: #64748b;
+  font-size: 14px;
+  padding: 12px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1200px) {
+  .visitor-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .visitor-right-column {
+    position: relative;
+    top: auto;
+  }
+
+  .visitor-similar-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .visitor-detail-topbar {
+    height: auto;
+    grid-template-columns: 1fr;
+    padding: 18px;
+  }
+
+  .visitor-detail-brand {
+    border-right: none;
+  }
+
+  .visitor-detail-wrapper {
+    padding: 18px;
+  }
+
+  .visitor-main-photo {
+    height: 280px;
+  }
+
+  .visitor-thumbs-row {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 10px;
+  }
+
+  .visitor-thumb {
+    height: 85px;
+  }
+
+  .visitor-detail-info h1 {
+    font-size: 23px;
+  }
+
+  .visitor-main-specs {
+    gap: 15px;
+  }
+
+  .visitor-detail-line {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .visitor-actions-box {
+    grid-template-columns: 1fr;
+  }
+
+  .visitor-similar-card {
+    grid-template-columns: 120px 1fr 42px;
+  }
+}
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="visitor-detail-page">
+
+  <!-- TOPBAR -->
+  <header class="visitor-detail-topbar">
+    <a href="{% url 'accounts:accueil' %}" class="visitor-detail-brand site-logo-link">
+      <img src="{% static 'images/logo.png' %}" alt="Logement Immobilier" class="site-logo-img">
+    </a>
+
+    <div class="visitor-detail-brand">
+      LOGEMENT
+      <span>IMMOBILIER</span>
+    </div>
+
+    <a href="{% url 'dashboard:visitor_dashboard' %}" class="visitor-back-link">
+      ← Retour aux annonces
+    </a>
+
+    <div class="visitor-profile-zone">
+      {% include "includes/user_profile_button.html" %}
+    </div>
+
+  </header>
+
+  <div class="visitor-detail-wrapper">
+
+    <div class="visitor-detail-grid">
+
+      <!-- LEFT -->
+      <div class="visitor-left-column">
+
+        <div class="visitor-left-card">
+
+          <!-- MAIN PHOTO -->
+          <div class="visitor-main-photo">
+            {% with photo=photos.first %}
+              {% if photo %}
+                <img id="visitorMainImage" src="{{ photo.image.url }}" alt="{{ annonce.titre }}">
+              {% else %}
+                <div class="visitor-no-photo"><i class="bx bxs-home"></i></div>
+              {% endif %}
+            {% endwith %}
+
+            <a href="{% url 'favorites:toggle_favori' annonce.pk %}" class="visitor-heart-top">
+              {% if est_favori %}<i class="bx bxs-heart"></i>{% else %}<i class="bx bx-heart"></i>{% endif %}
+            </a>
+          </div>
+
+          <!-- THUMBS -->
+          <div class="visitor-thumbs-row">
+            {% for photo in photos %}
+              <button type="button" class="visitor-thumb {% if forloop.first %}active{% endif %}" data-image="{{ photo.image.url }}">
+                <img src="{{ photo.image.url }}" alt="Photo annonce">
+              </button>
+            {% empty %}
+              <div class="visitor-thumb visitor-thumb-empty active"><i class="bx bxs-home"></i></div>
+            {% endfor %}
+          </div>
+
+          <!-- INFOS -->
+          <div class="visitor-detail-info">
+
+            <h1>{{ annonce.titre }}</h1>
+
+            <div class="visitor-main-specs">
+
+              <div class="visitor-spec-item">
+                <span class="visitor-spec-icon"><i class="bx bx-purchase-tag"></i></span>
+                <strong>{{ annonce.prix|espace_milliers }} DH</strong>
+              </div>
+
+              <div class="visitor-spec-item">
+                <span class="visitor-spec-icon"><i class="bx bx-ruler"></i></span>
+                <strong>{{ annonce.surface }} m²</strong>
+              </div>
+
+              <div class="visitor-spec-item">
+                <span class="visitor-spec-icon"><i class="bx bx-building"></i></span>
+                <strong>{{ annonce.get_type_bien_display }}</strong>
+              </div>
+
+            </div>
+
+            <div class="visitor-description">
+              {{ annonce.description|linebreaksbr }}
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- RIGHT -->
+      <div class="visitor-right-column">
+
+        <!-- DETAILS -->
+        <div class="visitor-side-card">
+          <h2>Détails du bien</h2>
+
+          <div class="visitor-detail-lines">
+
+            <div class="visitor-detail-line">
+              <span>Localisation</span>
+              <strong>{{ annonce.adresse }}</strong>
+            </div>
+
+            <div class="visitor-detail-line">
+              <span>Ville</span>
+              <strong>{{ annonce.ville }}</strong>
+            </div>
+
+            <div class="visitor-detail-line">
+              <span>Type de bien</span>
+              <strong>{{ annonce.get_type_bien_display }}</strong>
+            </div>
+
+            <div class="visitor-detail-line">
+              <span>Prix</span>
+              <strong>{{ annonce.prix|espace_milliers }} DH</strong>
+            </div>
+
+            <div class="visitor-detail-line">
+              <span>Surface</span>
+              <strong>{{ annonce.surface }} m²</strong>
+            </div>
+
+            <div class="visitor-detail-line">
+              <span>Statut</span>
+              <strong class="visitor-status">{{ annonce.get_statut_display }}</strong>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- MAP -->
+        {% if annonce.latitude and annonce.longitude %}
+        <div class="visitor-side-card">
+          <h2>Localisation</h2>
+          <div id="map-visitor"></div>
+        </div>
+        {% endif %}
+
+        <!-- OWNER -->
+        <div class="visitor-side-card">
+          <h2>Contact du propriétaire</h2>
+
+          <div class="visitor-owner-list">
+
+            <div class="visitor-owner-line">
+              <span><i class="bx bxs-user"></i></span>
+              <strong>{{ annonce.proprietaire.get_full_name|default:annonce.proprietaire.username }}</strong>
+            </div>
+
+            <div class="visitor-owner-line">
+              <span><i class="bx bx-envelope"></i>️</span>
+              <strong>
+                {% if annonce.proprietaire.email %}
+                  {{ annonce.proprietaire.email }}
+                {% else %}
+                  Email non renseigné
+                {% endif %}
+              </strong>
+            </div>
+
+            {% if profil_proprietaire %}
+              {% if profil_proprietaire.telephone %}
+                <div class="visitor-owner-line">
+                  <span><i class="bx bx-phone"></i></span>
+                  <strong>{{ profil_proprietaire.telephone }}</strong>
+                </div>
+              {% endif %}
+
+              {% if profil_proprietaire.ville %}
+                <div class="visitor-owner-line">
+                  <span><i class="bx bxs-map"></i></span>
+                  <strong>{{ profil_proprietaire.ville }}</strong>
+                </div>
+              {% endif %}
+
+              {% if profil_proprietaire.adresse %}
+                <div class="visitor-owner-line">
+                  <span><i class="bx bxs-home"></i></span>
+                  <strong>{{ profil_proprietaire.adresse }}</strong>
+                </div>
+              {% endif %}
+            {% endif %}
+
+          </div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="visitor-actions-box">
+
+          <a href="{% url 'visits:demander_visite' annonce.pk %}" class="visitor-action-btn visit">
+            <i class="bx bx-calendar"></i> Demander une visite
+          </a>
+
+          <a href="{% url 'favorites:toggle_favori' annonce.pk %}" class="visitor-action-btn save">
+            {% if est_favori %}
+              <i class="bx bxs-heart"></i> Retirer
+            {% else %}
+              <i class="bx bx-heart"></i> Sauvegarder
+            {% endif %}
+          </a>
+
+        </div>
+
+        <a href="{% url 'properties:signaler_annonce' annonce.pk %}" class="visitor-report-btn">
+          <i class="bx bxs-flag"></i> Signaler cette annonce
+        </a>
+
+      </div>
+
+    </div>
+
+    <!-- SIMILAIRES -->
+    <div class="visitor-similar-section">
+
+      <h2>Biens similaires</h2>
+
+      <div class="visitor-similar-grid">
+
+        {% for item in similaires %}
+          <div class="visitor-similar-card">
+
+            <a href="{% url 'properties:detail_annonce' item.pk %}" class="visitor-similar-img">
+              {% with photo=item.photos.first %}
+                {% if photo %}
+                  <img src="{{ photo.image.url }}" alt="{{ item.titre }}">
+                {% else %}
+                  <div class="visitor-similar-empty-img"><i class="bx bxs-home"></i></div>
+                {% endif %}
+              {% endwith %}
+            </a>
+
+            <div class="visitor-similar-body">
+              <a href="{% url 'properties:detail_annonce' item.pk %}">
+                <h3>{{ item.titre }}</h3>
+              </a>
+              <p>{{ item.ville }}</p>
+              <span>{{ item.surface }} m²</span>
+              <strong>{{ item.prix|espace_milliers }} DH</strong>
+            </div>
+
+            <a href="{% url 'favorites:toggle_favori' item.pk %}" class="visitor-similar-heart">
+              <i class="bx bx-heart"></i>
+            </a>
+
+          </div>
+        {% empty %}
+          <div class="visitor-empty-message">
+            Aucun bien similaire pour le moment.
+          </div>
+        {% endfor %}
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+{% if annonce.latitude and annonce.longitude %}
+<script>
+  const latitude = parseFloat("{{ annonce.latitude|default:'0' }}".replace(",", "."));
+  const longitude = parseFloat("{{ annonce.longitude|default:'0' }}".replace(",", "."));
+
+  const mapVisitor = L.map("map-visitor").setView([latitude, longitude], 14);
+
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
+    attribution: "Tiles &copy; Esri",
+    maxZoom: 19
+  }).addTo(mapVisitor);
+
+  L.marker([latitude, longitude])
+    .addTo(mapVisitor)
+    .bindPopup("{{ annonce.titre|escapejs }}")
+    .openPopup();
+</script>
+{% endif %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const mainImage = document.getElementById("visitorMainImage");
+  const thumbs = document.querySelectorAll(".visitor-thumb[data-image]");
+
+  thumbs.forEach(function (thumb) {
+    thumb.addEventListener("click", function () {
+      if (!mainImage) return;
+
+      mainImage.src = thumb.dataset.image;
+
+      thumbs.forEach(function (item) {
+        item.classList.remove("active");
+      });
+
+      thumb.classList.add("active");
+    });
+  });
+});
+</script>
+
+{% endblock %}

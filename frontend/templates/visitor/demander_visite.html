@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% load static %}
+{% load format_filters %}
+
+{% block title %}Demander une visite{% endblock %}
+
+{% block body %}
+
+<div class="visit-request-page">
+
+  <!-- TOPBAR -->
+  <header class="visit-request-topbar">
+    <a href="{% url 'accounts:accueil' %}" class="visit-request-brand site-logo-link">
+      <img src="{% static 'images/logo.png' %}" alt="Logement Immobilier" class="site-logo-img">
+    </a>
+
+    <div class="visit-request-brand">
+      <i class="bx bxs-home"></i> <strong>Logement <span>Immobilier</span></strong>
+    </div>
+
+    <div class="visit-request-nav">
+      <a href="{% url 'properties:detail_annonce' annonce.pk %}" class="visit-nav-btn">
+        ← Retour au détail
+      </a>
+
+      <a href="{% url 'dashboard:visitor_dashboard' %}" class="visit-nav-btn">
+        Toutes les annonces
+      </a>
+
+      {% include "includes/user_profile_button.html" %}
+    </div>
+
+  </header>
+
+  <!-- CONTENT -->
+  <main class="visit-request-content">
+
+    <div class="visit-request-header">
+      <div>
+        <h1>Demander une visite</h1>
+        <p>Envoyez une demande au propriétaire pour visiter ce logement.</p>
+      </div>
+    </div>
+
+    <div class="visit-request-layout">
+
+      <!-- LEFT : RESUME ANNONCE -->
+      <section class="visit-annonce-card">
+
+        <div class="visit-annonce-image">
+          {% with photo=annonce.photos.first %}
+            {% if photo %}
+              <img src="{{ photo.image.url }}" alt="{{ annonce.titre }}">
+            {% else %}
+              <div class="visit-no-image"><i class="bx bxs-home"></i></div>
+            {% endif %}
+          {% endwith %}
+        </div>
+
+        <div class="visit-annonce-info">
+
+          <span class="visit-badge">
+            {{ annonce.get_type_bien_display }}
+          </span>
+
+          <h2>{{ annonce.titre }}</h2>
+
+          <p class="visit-location">
+            <i class="bx bxs-map"></i> {{ annonce.ville }}{% if annonce.adresse %}, {{ annonce.adresse }}{% endif %}
+          </p>
+
+          <div class="visit-specs">
+            <div>
+              <span>Prix</span>
+              <strong>{{ annonce.prix|espace_milliers }} DH</strong>
+            </div>
+
+            <div>
+              <span>Surface</span>
+              <strong>{{ annonce.surface }} m²</strong>
+            </div>
+
+            <div>
+              <span>Type</span>
+              <strong>{{ annonce.get_type_bien_display }}</strong>
+            </div>
+          </div>
+
+          <div class="visit-owner-box">
+            <h3>Propriétaire</h3>
+
+            <p>
+              <i class="bx bxs-user"></i> {{ annonce.proprietaire.get_full_name|default:annonce.proprietaire.username }}
+            </p>
+
+            <p>
+              <i class="bx bx-envelope"></i>️ {{ annonce.proprietaire.email|default:"Email non renseigné" }}
+            </p>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- RIGHT : FORMULAIRE -->
+      <section class="visit-form-card">
+
+        <div class="visit-form-title">
+          <h2>Votre demande</h2>
+          <p>Expliquez brièvement votre disponibilité ou votre intérêt pour ce logement.</p>
+        </div>
+
+        <form method="post" class="visit-form">
+          {% csrf_token %}
+
+          <div class="visit-field">
+            <label>Votre message</label>
+
+            <textarea 
+              name="message" 
+              rows="7" 
+              placeholder="Bonjour, je suis intéressé(e) par ce logement. Je souhaite organiser une visite..."
+            >{{ request.POST.message }}</textarea>
+          </div>
+
+          <div class="visit-info-note">
+            <strong>Note :</strong>
+            Votre demande sera envoyée au propriétaire. Vous pourrez suivre sa réponse dans la page 
+            <b>Mes demandes</b>.
+          </div>
+
+          <div class="visit-form-actions">
+
+            <button type="submit" class="visit-submit-btn">
+              <i class="bx bx-calendar"></i> Envoyer la demande
+            </button>
+
+            <a href="{% url 'properties:detail_annonce' annonce.pk %}" class="visit-cancel-btn">
+              Annuler
+            </a>
+
+          </div>
+
+        </form>
+
+      </section>
+
+    </div>
+
+  </main>
+
+</div>
+
+{% endblock %}

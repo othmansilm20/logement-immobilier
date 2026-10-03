@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Modifier utilisateur{% endblock %}
+
+{% block body %}
+
+<div class="admin-pro-layout">
+
+  {% include "includes/sidebar_admin.html" with active="utilisateurs" %}
+
+  <main class="admin-pro-main">
+
+    <header class="admin-pro-topbar">
+      {% include "includes/user_profile_button.html" %}
+    </header>
+
+    <section class="admin-pro-content">
+
+      <div class="admin-pro-heading">
+        <div>
+          <h1 class="admin-pro-title">Modifier utilisateur</h1>
+          <p class="admin-pro-sub">Modifier les informations du compte.</p>
+        </div>
+
+        <a href="{% url 'dashboard:admin_utilisateurs' %}" class="admin-btn secondary">
+          Retour
+        </a>
+      </div>
+
+      <form method="post" enctype="multipart/form-data" class="admin-pro-form-card">
+        {% csrf_token %}
+
+        <div class="admin-form-grid">
+
+          <div class="form-field">
+            <label>Nom d'utilisateur</label>
+            <input type="text" name="username" value="{{ utilisateur.username }}" required>
+          </div>
+
+          <div class="form-field">
+            <label>Email</label>
+            <input type="email" name="email" value="{{ utilisateur.email }}">
+          </div>
+
+          <div class="form-field">
+            <label>Prénom</label>
+            <input type="text" name="first_name" value="{{ utilisateur.first_name }}">
+          </div>
+
+          <div class="form-field">
+            <label>Nom</label>
+            <input type="text" name="last_name" value="{{ utilisateur.last_name }}">
+          </div>
+
+          <div class="form-field">
+            <label>Niveau d'accès Django</label>
+            <select name="role">
+              <option value="simple" {% if not utilisateur.is_staff and not utilisateur.is_superuser %}selected{% endif %}>
+                Utilisateur simple
+              </option>
+
+              <option value="staff" {% if utilisateur.is_staff and not utilisateur.is_superuser %}selected{% endif %}>
+                Staff
+              </option>
+
+              <option value="admin" {% if utilisateur.is_superuser %}selected{% endif %}>
+                Admin
+              </option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label>Rôle métier</label>
+            <select name="role_metier">
+              {% for value, label in role_choices %}
+                <option value="{{ value }}" {% if profile.role == value %}selected{% endif %}>
+                  {{ label }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label>Statut</label>
+            <label class="check-label">
+              <input type="checkbox" name="is_active" {% if utilisateur.is_active %}checked{% endif %}>
+              Compte actif
+            </label>
+          </div>
+
+          <div class="form-field">
+            <label>Nouveau mot de passe</label>
+            <input type="password" name="nouveau_mot_de_passe" autocomplete="new-password" placeholder="Laisser vide pour ne pas changer">
+          </div>
+
+          <div class="form-field">
+            <label>Confirmer le mot de passe</label>
+            <input type="password" name="confirmer_mot_de_passe" autocomplete="new-password" placeholder="Laisser vide pour ne pas changer">
+          </div>
+
+          <div class="form-field">
+            <label>Photo de profil</label>
+            {% if profile.photo %}
+              <img src="{{ profile.photo.url }}" alt="Photo de profil" style="width:96px;height:96px;object-fit:cover;border-radius:50%;margin-bottom:10px;display:block;">
+              <label class="check-label" style="margin-bottom:10px;">
+                <input type="checkbox" name="delete_photo">
+                Supprimer la photo actuelle
+              </label>
+            {% endif %}
+            <input type="file" name="photo" accept="image/*">
+          </div>
+
+        </div>
+
+        <div class="admin-form-actions">
+          <button type="submit" class="admin-btn view">
+            Enregistrer
+          </button>
+
+          <a href="{% url 'dashboard:admin_utilisateurs' %}" class="admin-btn secondary">
+            Annuler
+          </a>
+        </div>
+
+      </form>
+
+    </section>
+
+  </main>
+
+</div>
+
+{% endblock %}

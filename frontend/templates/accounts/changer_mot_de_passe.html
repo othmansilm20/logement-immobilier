@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Changer le mot de passe{% endblock %}
+
+{% block body %}
+
+<div class="password-page">
+
+  <div class="password-card">
+
+    <div class="password-header">
+      <a href="javascript:history.back()" class="password-back">← Retour</a>
+      <h1>Changer le mot de passe</h1>
+      <p>Entrez votre ancien mot de passe puis choisissez un nouveau mot de passe.</p>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="password-field">
+        <label>Ancien mot de passe</label>
+        {{ form.old_password }}
+      </div>
+
+      <div class="password-field">
+        <label>Nouveau mot de passe</label>
+        {{ form.new_password1 }}
+      </div>
+
+      <div class="password-field">
+        <label>Confirmer le nouveau mot de passe</label>
+        {{ form.new_password2 }}
+      </div>
+
+      <button type="submit" class="password-save">
+        Enregistrer le mot de passe
+      </button>
+    </form>
+
+  </div>
+
+</div>
+
+{% endblock %}

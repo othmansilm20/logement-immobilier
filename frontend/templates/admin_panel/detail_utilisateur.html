@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}Détail utilisateur{% endblock %}
+
+{% block body %}
+
+<div class="admin-pro-layout">
+
+  {% include "includes/sidebar_admin.html" with active="utilisateurs" %}
+
+  <main class="admin-pro-main">
+
+    <header class="admin-pro-topbar">
+      {% include "includes/user_profile_button.html" %}
+    </header>
+
+    <section class="admin-pro-content">
+
+      <div class="admin-pro-heading">
+        <div>
+          <h1 class="admin-pro-title">Détail utilisateur</h1>
+          <p class="admin-pro-sub">Informations complètes du compte.</p>
+        </div>
+
+        <a href="{% url 'dashboard:admin_utilisateurs' %}" class="admin-btn secondary">
+          Retour
+        </a>
+      </div>
+
+      <div class="admin-pro-detail-card">
+
+        <h2><i class="bx bxs-user"></i> {{ utilisateur.username }}</h2>
+
+        <div class="admin-form-grid">
+          <div class="admin-detail-field">
+            <span>Nom d'utilisateur</span>
+            <strong>{{ utilisateur.username }}</strong>
+          </div>
+
+          <div class="admin-detail-field">
+            <span>Email</span>
+            <strong>
+              {% if utilisateur.email %}
+                {{ utilisateur.email }}
+              {% else %}
+                Non renseigné
+              {% endif %}
+            </strong>
+          </div>
+
+          <div class="admin-detail-field">
+            <span>Prénom</span>
+            <strong>{{ utilisateur.first_name|default:"Non renseigné" }}</strong>
+          </div>
+
+          <div class="admin-detail-field">
+            <span>Nom</span>
+            <strong>{{ utilisateur.last_name|default:"Non renseigné" }}</strong>
+          </div>
+
+          <div class="admin-detail-field">
+            <span>Rôle</span>
+            <strong>
+              {% if utilisateur.is_superuser %}
+                Admin
+              {% elif utilisateur.is_staff %}
+                Staff
+              {% else %}
+                Utilisateur simple
+              {% endif %}
+            </strong>
+          </div>
+
+          <div class="admin-detail-field">
+            <span>Statut</span>
+            <strong>
+              {% if utilisateur.is_active %}
+                Actif
+              {% else %}
+                Inactif
+              {% endif %}
+            </strong>
+          </div>
+
+          <div class="admin-detail-field">
+            <span>Date inscription</span>
+            <strong>{{ utilisateur.date_joined|date:"d/m/Y H:i" }}</strong>
+          </div>
+
+          <div class="admin-detail-field">
+            <span>Dernière connexion</span>
+            <strong>{{ utilisateur.last_login|date:"d/m/Y H:i"|default:"Jamais connecté" }}</strong>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="admin-table-card">
+
+        <div class="admin-card-header">
+          <h2>Annonces de cet utilisateur</h2>
+        </div>
+
+        <div class="admin-table user-annonces">
+
+          <div class="admin-table-head">
+            <span>Titre</span>
+            <span>Ville</span>
+            <span>Statut</span>
+            <span>Date création</span>
+          </div>
+
+          {% for annonce in annonces %}
+            <div class="admin-table-row">
+              <span>{{ annonce.titre }}</span>
+              <span>{{ annonce.ville }}</span>
+              <span>{{ annonce.statut }}</span>
+              <span>{{ annonce.date_creation|date:"d/m/Y H:i" }}</span>
+            </div>
+          {% empty %}
+            <div class="admin-empty">
+              Cet utilisateur n'a aucune annonce.
+            </div>
+          {% endfor %}
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+{% endblock %}

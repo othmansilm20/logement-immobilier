@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Signalements{% endblock %}
+
+{% block body %}
+
+<div class="admin-pro-layout">
+
+  {% include "includes/sidebar_admin.html" with active="signalements" %}
+
+  <main class="admin-pro-main">
+
+    <header class="admin-pro-topbar">
+      {% include "includes/user_profile_button.html" %}
+    </header>
+
+    <section class="admin-pro-content">
+
+      <div class="admin-pro-heading">
+        <div>
+          <h1 class="admin-pro-title">Signalements</h1>
+          <p class="admin-pro-sub">{{ total_signalements }} signalement(s) trouvé(s)</p>
+        </div>
+      </div>
+
+      <div class="admin-table-card">
+
+        <form method="get" class="admin-pro-filter signalements">
+          <input
+            type="text"
+            name="q"
+            placeholder="Rechercher par annonce, visiteur, propriétaire..."
+            value="{{ q }}"
+          >
+
+          <select name="statut">
+            <option value="">Tous les statuts</option>
+            <option value="nouveau" {% if statut == "nouveau" %}selected{% endif %}>Nouveau</option>
+            <option value="traite" {% if statut == "traite" %}selected{% endif %}>Traité</option>
+            <option value="ignore" {% if statut == "ignore" %}selected{% endif %}>Ignoré</option>
+          </select>
+
+          <button type="submit" class="admin-btn view">
+            Rechercher
+          </button>
+
+          <a href="{% url 'dashboard:admin_signalements' %}" class="admin-btn secondary">
+            Réinitialiser
+          </a>
+        </form>
+
+        <div class="admin-table signalements">
+
+          <div class="admin-table-head">
+            <span>Annonce</span>
+            <span>Signalé par</span>
+            <span>Raison</span>
+            <span>Statut</span>
+            <span>Date</span>
+            <span>Actions</span>
+          </div>
+
+          {% for signalement in signalements %}
+
+            <div class="admin-table-row">
+
+              <div>
+                <strong>{{ signalement.annonce.titre }}</strong>
+              </div>
+
+              <div>{{ signalement.utilisateur.username }}</div>
+
+              <div>{{ signalement.get_raison_display }}</div>
+
+              <div>
+                {% if signalement.statut == "nouveau" %}
+                  <span class="status-user pending">Nouveau</span>
+                {% elif signalement.statut == "traite" %}
+                  <span class="status-user active">Traité</span>
+                {% else %}
+                  <span class="status-user draft">Ignoré</span>
+                {% endif %}
+              </div>
+
+              <div>{{ signalement.date_signalement|date:"d/m/Y H:i" }}</div>
+
+              <div class="admin-actions">
+                <a href="{% url 'dashboard:admin_detail_annonce' signalement.annonce.pk %}?next=signalements"
+                   class="admin-btn view"
+                   title="Voir annonce">
+                  <i class="bx bx-show"></i>
+                </a>
+              </div>
+
+            </div>
+
+            {% if signalement.message %}
+              <div class="admin-message-row">
+                <strong>Message :</strong> {{ signalement.message }}
+              </div>
+            {% endif %}
+
+          {% empty %}
+
+            <div class="admin-empty">
+              Aucun signalement trouvé.
+            </div>
+
+          {% endfor %}
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+{% endblock %}

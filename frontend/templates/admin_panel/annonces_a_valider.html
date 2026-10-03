@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Annonces à valider{% endblock %}
+
+{% block body %}
+
+<div class="admin-pro-layout">
+
+  {% include "includes/sidebar_admin.html" with active="annonces_validation" %}
+
+  <main class="admin-pro-main">
+
+    <header class="admin-pro-topbar">
+      {% include "includes/user_profile_button.html" %}
+    </header>
+
+    <section class="admin-pro-content">
+
+      <div class="admin-pro-heading">
+        <div>
+          <h1 class="admin-pro-title">Annonces en attente de validation</h1>
+          <p class="admin-pro-sub">
+            {{ nb_attente }} annonce{% if nb_attente > 1 %}s{% endif %} en attente
+          </p>
+        </div>
+      </div>
+
+      <div class="admin-table-card">
+
+        <form method="get" class="admin-pro-filter validation">
+          <input
+            type="text"
+            name="q"
+            placeholder="Rechercher une annonce..."
+            value="{{ q }}"
+          >
+
+          <select name="ville">
+            <option value="">Toutes les villes</option>
+            {% for v in villes %}
+              <option value="{{ v }}" {% if ville == v %}selected{% endif %}>
+                {{ v }}
+              </option>
+            {% endfor %}
+          </select>
+
+          <select name="type_bien">
+            <option value="">Tous les types</option>
+            <option value="appartement" {% if type_bien == "appartement" %}selected{% endif %}>Appartement</option>
+            <option value="maison" {% if type_bien == "maison" %}selected{% endif %}>Maison</option>
+            <option value="villa" {% if type_bien == "villa" %}selected{% endif %}>Villa</option>
+            <option value="studio" {% if type_bien == "studio" %}selected{% endif %}>Studio</option>
+          </select>
+
+          <select name="tri">
+            <option value="">Trier par date</option>
+            <option value="recente" {% if tri == "recente" %}selected{% endif %}>Plus récentes</option>
+            <option value="ancienne" {% if tri == "ancienne" %}selected{% endif %}>Plus anciennes</option>
+          </select>
+
+          <button type="submit" class="admin-btn view">
+            Rechercher
+          </button>
+
+          <a href="{% url 'dashboard:admin_valider' %}" class="admin-btn secondary">
+            Réinitialiser
+          </a>
+        </form>
+
+      </div>
+
+      <div class="admin-validation-list">
+
+        {% for annonce in annonces %}
+          <div class="admin-table-card admin-validation-card">
+
+            <div class="admin-validation-img">
+              {% if annonce.photos.all %}
+                <img src="{{ annonce.photos.all.0.image.url }}" alt="{{ annonce.titre }}">
+              {% else %}
+                <i class="bx bxs-home"></i>
+              {% endif %}
+            </div>
+
+            <div>
+              <h2 class="admin-validation-title">{{ annonce.titre }}</h2>
+
+              <div class="admin-validation-meta">
+                <span><i class="bx bxs-user"></i> {{ annonce.proprietaire.username }}</span>
+                <span><i class="bx bxs-map"></i> {{ annonce.ville }}</span>
+                <span><i class="bx bx-purchase-tag"></i>️ {{ annonce.prix }} MAD</span>
+                <span><i class="bx bx-ruler"></i> {{ annonce.surface }} m²</span>
+                <span><i class="bx bx-building"></i> {{ annonce.get_type_bien_display }}</span>
+              </div>
+
+              <p class="admin-validation-desc">
+                {{ annonce.description|truncatechars:90 }}
+              </p>
+
+              <div class="admin-validation-meta">
+                <span><i class="bx bx-calendar"></i> Soumise le {{ annonce.date_soumission|date:"d/m/Y H:i" }}</span>
+              </div>
+            </div>
+
+            <div class="admin-actions">
+              <form method="post"
+                    action="{% url 'dashboard:admin_approuver' annonce.pk %}"
+                    onsubmit="return confirm('Voulez-vous approuver cette annonce ?');">
+                {% csrf_token %}
+                <button type="submit" class="admin-btn approve">
+                  <i class="bx bx-check"></i> Approuver
+                </button>
+              </form>
+
+              <form method="post"
+                    action="{% url 'dashboard:admin_rejeter' annonce.pk %}"
+                    onsubmit="return confirm('Voulez-vous rejeter cette annonce ?');">
+                {% csrf_token %}
+                <button type="submit" class="admin-btn reject">
+                  <i class="bx bx-x"></i> Rejeter
+                </button>
+              </form>
+
+              <a href="{% url 'dashboard:admin_detail_annonce' annonce.pk %}?next=validation" class="admin-btn view">
+                Voir détails
+              </a>
+            </div>
+
+          </div>
+        {% empty %}
+          <div class="admin-empty admin-table-card">
+            <i class="bx bx-party"></i> Aucune annonce en attente de validation.
+          </div>
+        {% endfor %}
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+{% endblock %}

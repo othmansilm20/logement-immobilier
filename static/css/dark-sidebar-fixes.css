@@ -1,0 +1,673 @@
+/* Corrections finales chargees apres les themes principaux. */
+
+.owner-pro-logo.site-logo-link,
+.admin-modern-brand.site-logo-link {
+  width: 100%;
+  justify-content: flex-start;
+  overflow: hidden;
+}
+
+.owner-pro-logo.site-logo-link {
+  min-height: 92px;
+  padding: 10px 14px 24px !important;
+}
+
+.admin-modern-brand.site-logo-link {
+  min-height: 98px !important;
+  height: auto !important;
+  padding: 10px 18px 24px !important;
+}
+
+.owner-pro-logo.site-logo-link > div,
+.admin-modern-brand.site-logo-link > div {
+  width: 205px;
+  height: 70px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.owner-pro-logo.site-logo-link .site-logo-img,
+.admin-modern-brand.site-logo-link .site-logo-img {
+  width: 205px !important;
+  height: auto !important;
+  max-width: none !important;
+  object-fit: contain;
+  filter: brightness(0) invert(1) contrast(1.12) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.18));
+  opacity: 0.96;
+  transform: none !important;
+}
+
+.admin-modern-brand.site-logo-link .site-logo-img {
+  width: 210px !important;
+}
+
+body.dark-mode .owner-pro-logo.site-logo-link .site-logo-img,
+body.dark-mode .admin-modern-brand.site-logo-link .site-logo-img {
+  filter: brightness(0) invert(1) contrast(1.15) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.25)) !important;
+  opacity: 0.98;
+}
+
+body.dark-mode,
+body.dark-mode .admin-pro-layout,
+body.dark-mode .owner-pro-main,
+body.dark-mode .admin-pro-main,
+body.dark-mode .admin-pro-content,
+body.dark-mode .owner-pro-content,
+body.dark-mode .create-modern-page,
+body.dark-mode .create-modern-main,
+body.dark-mode .visit-page,
+body.dark-mode .visit-main,
+body.dark-mode .visit-content,
+body.dark-mode .visitor-page,
+body.dark-mode .visitor-requests-page,
+body.dark-mode .visit-request-page,
+body.dark-mode .detail-page,
+body.dark-mode .visitor-detail-page,
+body.dark-mode .fav-page,
+body.dark-mode .create-page {
+  background: #0f172a !important;
+  color: #e5e7eb !important;
+}
+
+body.dark-mode .owner-pro-topbar,
+body.dark-mode .admin-pro-topbar,
+body.dark-mode .topbar,
+body.dark-mode .visitor-topbar,
+body.dark-mode .visitor-requests-topbar,
+body.dark-mode .visit-request-topbar,
+body.dark-mode .visitor-detail-topbar,
+body.dark-mode .fav-topbar,
+body.dark-mode .detail-nav,
+body.dark-mode .detail-new-nav {
+  background: #111827 !important;
+  border-color: #1f2937 !important;
+  color: #e5e7eb !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28) !important;
+}
+
+body.dark-mode .owner-pro-card,
+body.dark-mode .owner-request-box,
+body.dark-mode .admin-table-card,
+body.dark-mode .admin-pro-form-card,
+body.dark-mode .admin-pro-detail-card,
+body.dark-mode .admin-detail-card,
+body.dark-mode .admin-detail-field,
+body.dark-mode .create-card,
+body.dark-mode .photo-drop-zone,
+body.dark-mode .visit-card,
+body.dark-mode .visit-empty,
+body.dark-mode .visitor-card,
+body.dark-mode .visitor-filters-card,
+body.dark-mode .visitor-requests-card,
+body.dark-mode .request-stat-card,
+body.dark-mode .visit-annonce-card,
+body.dark-mode .visit-form-card,
+body.dark-mode .visitor-left-card,
+body.dark-mode .visitor-side-card,
+body.dark-mode .visitor-similar-section,
+body.dark-mode .detail-info-card,
+body.dark-mode .right-card,
+body.dark-mode .side-card,
+body.dark-mode .similar-section,
+body.dark-mode .profile-card,
+body.dark-mode .form-card,
+body.dark-mode .new-card,
+body.dark-mode .kpi-card,
+body.dark-mode .listing-card,
+body.dark-mode .listings-table,
+body.dark-mode .users-table,
+body.dark-mode .admin-pending-table,
+body.dark-mode .app-table,
+body.dark-mode .fav-toolbar,
+body.dark-mode .fav-card,
+body.dark-mode .fav-empty {
+  background: #111827 !important;
+  border-color: #1f2937 !important;
+  color: #e5e7eb !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22) !important;
+}
+
+body.dark-mode .owner-pro-card-header,
+body.dark-mode .admin-card-header,
+body.dark-mode .visit-property,
+body.dark-mode .visit-date,
+body.dark-mode .requests-card-head,
+body.dark-mode .owner-pro-table-footer {
+  border-color: #1f2937 !important;
+}
+
+body.dark-mode .owner-pro-table-head,
+body.dark-mode .admin-table-head,
+body.dark-mode .table-head,
+body.dark-mode .users-table .table-head,
+body.dark-mode .requests-table-head,
+body.dark-mode .app-table-head,
+body.dark-mode .admin-pending-table .pending-head {
+  background: #020617 !important;
+  border-color: #1f2937 !important;
+  color: #94a3b8 !important;
+}
+
+body.dark-mode .owner-pro-table-row,
+body.dark-mode .admin-table-row,
+body.dark-mode .table-row,
+body.dark-mode .users-table .table-row,
+body.dark-mode .requests-table-row,
+body.dark-mode .app-table-row,
+body.dark-mode .admin-pending-table .pending-row {
+  background: #111827 !important;
+  border-color: #1f2937 !important;
+  color: #e5e7eb !important;
+}
+
+body.dark-mode .owner-pro-table-row:hover,
+body.dark-mode .admin-table-row:hover,
+body.dark-mode .table-row:hover,
+body.dark-mode .requests-table-row:hover,
+body.dark-mode .app-table-row:hover,
+body.dark-mode .admin-pending-table .pending-row:hover {
+  background: #172033 !important;
+}
+
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode .owner-welcome-header h1,
+body.dark-mode .owner-pro-card-header h2,
+body.dark-mode .create-main-title,
+body.dark-mode .create-card h2,
+body.dark-mode .status-options strong,
+body.dark-mode .visit-title h1,
+body.dark-mode .visit-filter label,
+body.dark-mode .visitor-info h3,
+body.dark-mode .visit-property h3,
+body.dark-mode .admin-pro-title,
+body.dark-mode .admin-card-header h2,
+body.dark-mode .admin-detail-field strong,
+body.dark-mode .admin-validation-title,
+body.dark-mode .request-annonce-cell strong,
+body.dark-mode .request-date-cell strong,
+body.dark-mode .request-response-cell strong,
+body.dark-mode .visitor-empty-requests h3,
+body.dark-mode .app-table-item strong,
+body.dark-mode .admin-pending-table .pending-annonce strong,
+body.dark-mode .page-title,
+body.dark-mode .fav-title,
+body.dark-mode .fav-name {
+  color: #f9fafb !important;
+}
+
+body.dark-mode p,
+body.dark-mode small,
+body.dark-mode label,
+body.dark-mode .owner-pro-empty,
+body.dark-mode .owner-pro-table-footer,
+body.dark-mode .create-breadcrumb,
+body.dark-mode .map-help-modern,
+body.dark-mode .photo-bottom-info,
+body.dark-mode .photo-drop-zone p,
+body.dark-mode .photo-drop-zone small,
+body.dark-mode .status-help,
+body.dark-mode .status-options span,
+body.dark-mode .visit-title p,
+body.dark-mode .visitor-info p,
+body.dark-mode .visit-property p,
+body.dark-mode .visit-date p,
+body.dark-mode .visit-message,
+body.dark-mode .visit-treated,
+body.dark-mode .table-cell,
+body.dark-mode .users-table .table-cell,
+body.dark-mode .app-table-cell,
+body.dark-mode .app-table-item small,
+body.dark-mode .admin-pending-table .pending-cell,
+body.dark-mode .admin-pending-table .pending-annonce small,
+body.dark-mode .request-annonce-cell span,
+body.dark-mode .request-date-cell span,
+body.dark-mode .request-message-cell,
+body.dark-mode .request-response-cell,
+body.dark-mode .admin-card-header p,
+body.dark-mode .admin-detail-field span,
+body.dark-mode .page-sub,
+body.dark-mode .muted-text,
+body.dark-mode .visitor-location,
+body.dark-mode .detail-desc,
+body.dark-mode .fav-sub,
+body.dark-mode .fav-city {
+  color: #cbd5e1 !important;
+}
+
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select,
+body.dark-mode .owner-search-box,
+body.dark-mode .owner-search-box input,
+body.dark-mode .form-field input,
+body.dark-mode .form-field textarea,
+body.dark-mode .form-field select,
+body.dark-mode .map-search-modern,
+body.dark-mode .visit-filter input,
+body.dark-mode .visit-filter select,
+body.dark-mode .visit-response,
+body.dark-mode .admin-pro-search,
+body.dark-mode .admin-pro-search input,
+body.dark-mode .topbar-search,
+body.dark-mode .visitor-top-search input,
+body.dark-mode .fav-search input,
+body.dark-mode .admin-pro-filter input,
+body.dark-mode .admin-pro-filter select,
+body.dark-mode .admin-pro-form-card input,
+body.dark-mode .admin-pro-form-card select,
+body.dark-mode .admin-pro-form-card textarea,
+body.dark-mode .admin-profile-field input,
+body.dark-mode .admin-profile-field select,
+body.dark-mode .admin-profile-field textarea {
+  background: #020617 !important;
+  border-color: #334155 !important;
+  color: #f9fafb !important;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+  color: #64748b !important;
+}
+
+body.dark-mode .owner-avatar,
+body.dark-mode .owner-pro-img,
+body.dark-mode .create-map,
+body.dark-mode #map,
+body.dark-mode .property-thumb,
+body.dark-mode .visitor-photo,
+body.dark-mode .photo-preview-item,
+body.dark-mode .admin-photo-main,
+body.dark-mode .admin-thumb,
+body.dark-mode .admin-validation-img,
+body.dark-mode .request-annonce-icon,
+body.dark-mode .visitor-card-img {
+  background: #1f2937 !important;
+  color: #cbd5e1 !important;
+}
+
+body.dark-mode .admin-btn,
+body.dark-mode .owner-pro-action,
+body.dark-mode .btn-draft,
+body.dark-mode .btn-cancel-modern,
+body.dark-mode .visit-btn.secondary,
+body.dark-mode .visit-cancel-btn,
+body.dark-mode .admin-pending-table .pending-btn.view {
+  background: #020617 !important;
+  border-color: #334155 !important;
+  color: #93c5fd !important;
+}
+
+body.dark-mode .owner-alert-info {
+  background: rgba(37, 99, 235, 0.16) !important;
+  border-color: rgba(96, 165, 250, 0.35) !important;
+  color: #dbeafe !important;
+}
+
+body.dark-mode .photo-drop-zone,
+body.dark-mode .visit-info-note {
+  background: rgba(37, 99, 235, 0.14) !important;
+  border-color: rgba(96, 165, 250, 0.35) !important;
+  color: #dbeafe !important;
+}
+
+body.dark-mode .theme-toggle-btn {
+  background: #e5e7eb !important;
+  color: #0f172a !important;
+}
+
+/* Couverture sombre supplementaire pour les composants qui redefinissent
+   leurs couleurs plus loin dans les anciens blocs CSS. */
+body.dark-mode .owner-dashboard-pro,
+body.dark-mode .owner-pro-layout,
+body.dark-mode .admin-users-page,
+body.dark-mode .admin-all-page,
+body.dark-mode .admin-pending-page,
+body.dark-mode .visitor-dashboard,
+body.dark-mode .visitor-content,
+body.dark-mode .visitor-detail-main,
+body.dark-mode .visitor-requests-content,
+body.dark-mode .visit-request-content,
+body.dark-mode .fav-content,
+body.dark-mode .detail-content {
+  background: #0f172a !important;
+  color: #e5e7eb !important;
+}
+
+body.dark-mode .owner-pro-topbar *,
+body.dark-mode .admin-pro-topbar *,
+body.dark-mode .visitor-topbar *,
+body.dark-mode .visitor-requests-topbar *,
+body.dark-mode .visit-request-topbar *,
+body.dark-mode .fav-topbar *,
+body.dark-mode .detail-nav * {
+  color: #e5e7eb !important;
+}
+
+body.dark-mode .owner-pro-kpi-icon,
+body.dark-mode .request-avatar,
+body.dark-mode .visitor-card-body,
+body.dark-mode .visitor-filters,
+body.dark-mode .visitor-top-search,
+body.dark-mode .visitor-empty-requests,
+body.dark-mode .visit-specs div,
+body.dark-mode .visit-owner-box,
+body.dark-mode .admin-pro-filter,
+body.dark-mode .admin-users-filters,
+body.dark-mode .admin-all-filters,
+body.dark-mode .admin-users-card,
+body.dark-mode .admin-all-card,
+body.dark-mode .admin-users-table,
+body.dark-mode .admin-all-table,
+body.dark-mode .admin-validation-card,
+body.dark-mode .admin-profile-card,
+body.dark-mode .photo-upload-box,
+body.dark-mode .photo-drop-new,
+body.dark-mode .city-dropdown,
+body.dark-mode .global-user-dropdown,
+body.dark-mode .messages,
+body.dark-mode .message {
+  background: #111827 !important;
+  border-color: #1f2937 !important;
+  color: #e5e7eb !important;
+}
+
+body.dark-mode .btn,
+body.dark-mode button,
+body.dark-mode .btn-secondary,
+body.dark-mode .btn-save,
+body.dark-mode .btn-detail,
+body.dark-mode .btn-report,
+body.dark-mode .btn-back,
+body.dark-mode .btn-light,
+body.dark-mode .action-btn,
+body.dark-mode .btn-view-sm,
+body.dark-mode .pending-btn.view,
+body.dark-mode .admin-pending-table .pending-btn.view,
+body.dark-mode .admin-btn,
+body.dark-mode .admin-btn.view,
+body.dark-mode .admin-btn.secondary,
+body.dark-mode .admin-btn.delete,
+body.dark-mode .admin-btn.danger,
+body.dark-mode .admin-profile-btn.cancel,
+body.dark-mode .owner-pro-action,
+body.dark-mode .request-btn,
+body.dark-mode .request-btn.accept,
+body.dark-mode .request-btn.refuse,
+body.dark-mode .visitor-top-btn,
+body.dark-mode .visitor-nav-btn,
+body.dark-mode .visit-nav-btn,
+body.dark-mode .visit-cancel-btn,
+body.dark-mode .visit-btn.secondary,
+body.dark-mode .btn-draft,
+body.dark-mode .btn-cancel-modern,
+body.dark-mode .new-search-btn,
+body.dark-mode .heart-btn,
+body.dark-mode .fav-action,
+body.dark-mode .fav-filter-btn {
+  background: #020617 !important;
+  border-color: #334155 !important;
+  color: #93c5fd !important;
+  box-shadow: none !important;
+}
+
+body.dark-mode .btn:hover,
+body.dark-mode button:hover,
+body.dark-mode .btn-secondary:hover,
+body.dark-mode .btn-save:hover,
+body.dark-mode .btn-detail:hover,
+body.dark-mode .btn-report:hover,
+body.dark-mode .action-btn:hover,
+body.dark-mode .btn-view-sm:hover,
+body.dark-mode .admin-btn:hover,
+body.dark-mode .owner-pro-action:hover,
+body.dark-mode .visitor-top-btn:hover,
+body.dark-mode .visitor-nav-btn:hover,
+body.dark-mode .visit-nav-btn:hover,
+body.dark-mode .visit-cancel-btn:hover,
+body.dark-mode .visit-btn.secondary:hover,
+body.dark-mode .btn-draft:hover,
+body.dark-mode .btn-cancel-modern:hover,
+body.dark-mode .new-search-btn:hover,
+body.dark-mode .heart-btn:hover {
+  background: #172033 !important;
+  border-color: #475569 !important;
+  color: #bfdbfe !important;
+}
+
+body.dark-mode .btn-primary,
+body.dark-mode .btn-visit,
+body.dark-mode .visitor-search-btn,
+body.dark-mode .visitor-detail-btn,
+body.dark-mode .visit-submit-btn,
+body.dark-mode .btn-submit-modern,
+body.dark-mode .visit-filter-btn,
+body.dark-mode .request-view-btn,
+body.dark-mode .profile-save-v2,
+body.dark-mode .admin-profile-btn.save {
+  background: #2563eb !important;
+  border-color: #2563eb !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .approve-btn,
+body.dark-mode .pending-btn.approve,
+body.dark-mode .admin-btn.approve,
+body.dark-mode .visit-btn.accept {
+  background: #15803d !important;
+  border-color: #15803d !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .reject-btn,
+body.dark-mode .pending-btn.reject,
+body.dark-mode .admin-btn.reject,
+body.dark-mode .visit-btn.refuse,
+body.dark-mode .action-btn.del {
+  background: #991b1b !important;
+  border-color: #991b1b !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .status-badge,
+body.dark-mode .user-badge,
+body.dark-mode .owner-pro-status,
+body.dark-mode .visit-status,
+body.dark-mode .request-status,
+body.dark-mode .visit-badge,
+body.dark-mode .requests-card-head span {
+  background: rgba(37, 99, 235, 0.18) !important;
+  border-color: rgba(96, 165, 250, 0.35) !important;
+  color: #bfdbfe !important;
+}
+
+body.dark-mode .owner-pro-status.published,
+body.dark-mode .visit-status.accepted,
+body.dark-mode .request-status.accepted,
+body.dark-mode .status-badge.ok,
+body.dark-mode .status-badge.active {
+  background: rgba(21, 128, 61, 0.22) !important;
+  color: #86efac !important;
+}
+
+body.dark-mode .owner-pro-status.waiting,
+body.dark-mode .visit-status.waiting,
+body.dark-mode .request-status.waiting,
+body.dark-mode .status-badge.att {
+  background: rgba(180, 83, 9, 0.22) !important;
+  color: #fcd34d !important;
+}
+
+body.dark-mode .owner-pro-status.rejected,
+body.dark-mode .visit-status.refused,
+body.dark-mode .request-status.refused,
+body.dark-mode .status-badge.no {
+  background: rgba(153, 27, 27, 0.24) !important;
+  color: #fca5a5 !important;
+}
+
+body.dark-mode .global-user-btn {
+  background: #020617 !important;
+  border-color: #334155 !important;
+  color: #e5e7eb !important;
+}
+
+body.dark-mode .global-user-dropdown a,
+body.dark-mode .global-user-text strong,
+body.dark-mode .global-user-text span {
+  color: #e5e7eb !important;
+}
+
+body.dark-mode .global-menu-separator {
+  background: #1f2937 !important;
+}
+
+body.dark-mode .leaflet-control,
+body.dark-mode .leaflet-control a {
+  background: #111827 !important;
+  color: #e5e7eb !important;
+  border-color: #334155 !important;
+}
+
+body.dark-mode .admin-users-head,
+body.dark-mode .admin-all-head {
+  background: #020617 !important;
+  border-color: #1f2937 !important;
+  color: #94a3b8 !important;
+}
+
+body.dark-mode .admin-users-row,
+body.dark-mode .admin-all-row {
+  background: #111827 !important;
+  border-color: #1f2937 !important;
+  color: #e5e7eb !important;
+}
+
+body.dark-mode .admin-users-row:hover,
+body.dark-mode .admin-all-row:hover {
+  background: #172033 !important;
+}
+
+body.dark-mode .admin-users-head span,
+body.dark-mode .admin-all-head span {
+  color: #94a3b8 !important;
+}
+
+body.dark-mode .admin-users-row,
+body.dark-mode .admin-users-row span,
+body.dark-mode .admin-users-row strong,
+body.dark-mode .admin-all-row,
+body.dark-mode .admin-all-row div,
+body.dark-mode .admin-all-row span,
+body.dark-mode .admin-all-row strong {
+  color: #e5e7eb !important;
+}
+
+body.dark-mode .admin-all-row small,
+body.dark-mode .admin-user-info + span,
+body.dark-mode .admin-user-info strong + small {
+  color: #cbd5e1 !important;
+}
+
+body.dark-mode .admin-user-avatar,
+body.dark-mode .admin-all-img {
+  background: #1f2937 !important;
+  color: #cbd5e1 !important;
+}
+
+body.dark-mode .admin-user-actions a,
+body.dark-mode .admin-user-actions button {
+  background: #020617 !important;
+  border-color: #334155 !important;
+  color: #93c5fd !important;
+}
+
+body.dark-mode .admin-user-actions a:hover,
+body.dark-mode .admin-user-actions button:hover {
+  background: #172033 !important;
+  border-color: #475569 !important;
+  color: #bfdbfe !important;
+}
+
+body.dark-mode .admin-user-actions button.delete {
+  background: #991b1b !important;
+  border-color: #991b1b !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .role-badge,
+body.dark-mode .status-user {
+  background: rgba(37, 99, 235, 0.18) !important;
+  color: #bfdbfe !important;
+}
+
+body.dark-mode .status-user.active {
+  background: rgba(21, 128, 61, 0.22) !important;
+  color: #86efac !important;
+}
+
+body.dark-mode .status-user.inactive {
+  background: rgba(153, 27, 27, 0.24) !important;
+  color: #fca5a5 !important;
+}
+
+body.dark-mode .status-user.pending,
+body.dark-mode .status-user.draft {
+  background: rgba(180, 83, 9, 0.22) !important;
+  color: #fcd34d !important;
+}
+
+/* Pages non couvertes par les blocs precedents : restaient sur fond clair
+   alors que le texte passait en couleur claire (contraste illisible). */
+body.dark-mode .password-page,
+body.dark-mode .report-page {
+  background: #0f172a !important;
+}
+
+body.dark-mode .password-card,
+body.dark-mode .report-card {
+  background: #111827 !important;
+  border-color: #1f2937 !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22) !important;
+}
+
+body.dark-mode .password-back {
+  color: #93c5fd !important;
+}
+
+body.dark-mode .password-save,
+body.dark-mode .report-submit {
+  background: #2563eb !important;
+  border-color: #2563eb !important;
+  color: #ffffff !important;
+}
+
+body.dark-mode .report-cancel {
+  background: #020617 !important;
+  border-color: #334155 !important;
+  color: #93c5fd !important;
+}
+
+@media (max-width: 850px) {
+  .owner-pro-logo.site-logo-link,
+  .admin-modern-brand.site-logo-link {
+    justify-content: center;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .owner-pro-logo.site-logo-link > div:last-child,
+  .admin-modern-brand.site-logo-link > div:last-child {
+    display: none;
+  }
+
+  .owner-pro-logo.site-logo-link .owner-pro-logo-icon,
+  .admin-modern-brand.site-logo-link .admin-modern-logo {
+    display: flex !important;
+    margin: 0 auto;
+  }
+}

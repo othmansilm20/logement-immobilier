@@ -1,0 +1,1697 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Logement Immobilier — Accueil</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet" />
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+i.bx {
+  vertical-align: -0.125em;
+  line-height: 1;
+  margin-right: 0.35em;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background: #F8F7F4;
+  color: #0F1929;
+  overflow-x: hidden;
+  line-height: 1.65;
+}
+
+:root {
+  --white: #EDE7DC;
+  --off-white: #F6F2EA;
+  --cloud: #E9E3D8;
+  --navy: #0A0A0A;
+  --blue: #2563EB;
+  --blue-soft: #DBEAFE;
+  --blue-light: #EFF6FF;
+  --gray: rgba(15,25,41,0.48);
+  --gray-line: rgba(15,25,41,0.08);
+  --r: 16px;
+  --tr: 0.34s cubic-bezier(.25,.46,.45,.94);
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+@media(max-width:768px) {
+  .container { padding: 0 20px; }
+}
+
+/* HEADER */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  padding: 0 40px;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+  transition: background var(--tr), box-shadow var(--tr);
+}
+
+.site-header.scrolled {
+  background: rgba(10,10,10,0.92);
+  backdrop-filter: blur(20px) saturate(1.5);
+  -webkit-backdrop-filter: blur(20px) saturate(1.5);
+  box-shadow: 0 1px 0 rgba(255,255,255,0.10);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  height: 88px;
+  gap: 32px;
+}
+
+.header-logo {
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -.3px;
+  color: var(--navy);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.header-logo span {
+  color: var(--blue);
+}
+
+.site-logo-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 0;
+}
+
+.site-header .site-logo-img {
+  height: 52px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  font-size: initial;
+}
+
+.site-logo-img {
+  height: 30px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  font-size: initial;
+}
+
+.site-logo-link:hover .site-logo-img {
+  opacity: 0.85;
+  transition: 0.2s ease;
+}
+
+.site-header.scrolled .site-logo-img {
+  filter: invert(1);
+}
+
+.header-nav {
+  display: flex;
+  gap: 28px;
+  flex: 1;
+  justify-content: center;
+}
+
+.header-nav a {
+  font-size: 15px;
+  font-weight: 700;
+  color: rgba(10,10,10,.78);
+  text-decoration: none;
+  transition: color .2s;
+}
+
+.header-nav a:hover {
+  color: #000;
+}
+
+.site-header.scrolled .header-nav a {
+  color: #E5E5E5;
+}
+
+.site-header.scrolled .header-nav a:hover {
+  color: #fff;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.btn-ghost {
+  padding: 10px 20px;
+  border: 1px solid rgba(10,10,10,0.42);
+  border-radius: 100px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0A0A0A;
+  text-decoration: none;
+  transition: all .22s;
+  background: transparent;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.btn-ghost:hover {
+  background: #0A0A0A;
+  color: #fff;
+  border-color: #0A0A0A;
+}
+
+.btn-solid {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 100px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+  background: #0A0A0A;
+  text-decoration: none;
+  transition: all .22s;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.btn-solid:hover {
+  background: var(--blue);
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(37,99,235,.28);
+}
+
+.site-header.scrolled .btn-ghost {
+  border-color: rgba(248,247,240,0.48);
+  color: #F8F7F0;
+}
+
+.site-header.scrolled .btn-ghost:hover {
+  background: #fff;
+  color: #0A0A0A;
+  border-color: #fff;
+}
+
+.site-header.scrolled .btn-solid {
+  background: #fff;
+  color: #0A0A0A;
+}
+
+.site-header.scrolled .btn-solid:hover {
+  background: var(--blue);
+  color: #fff;
+}
+
+/* BURGER */
+.burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: auto;
+}
+
+.burger span {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  background: #0A0A0A;
+  border-radius: 2px;
+  transition: all .25s;
+}
+
+.site-header.scrolled .burger span {
+  background: #F8F7F0;
+}
+
+.mobile-nav {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 20px 18px;
+  background: rgba(10,10,10,.98);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--gray-line);
+}
+
+.mobile-nav.open {
+  display: flex;
+}
+
+.mobile-nav a {
+  font-size: 15px;
+  font-weight: 500;
+  color: #F8F7F0;
+  text-decoration: none;
+  padding: 8px 4px;
+  border-bottom: 1px solid var(--gray-line);
+}
+
+@media(max-width:860px) {
+  .header-nav,
+  .header-actions {
+    display: none;
+  }
+
+  .burger {
+    display: flex;
+  }
+
+  .site-header,
+  .site-header.scrolled {
+    padding: 0 20px;
+  }
+
+  .header-inner {
+    height: 76px;
+  }
+
+  .site-header .site-logo-img {
+    height: 34px;
+  }
+}
+
+/* HERO */
+.hero {
+  position: relative;
+  min-height: 350vh;
+}
+
+.hero-sticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* flex-start plutot que center : le contenu (titre + image) est souvent
+     plus haut que la fenetre, et un centrage pousserait alors le haut du
+     titre au-dessus de l'ecran, sous la barre de navigation, quelle que
+     soit la largeur/hauteur exacte de la fenetre. */
+  justify-content: flex-start;
+  background: var(--white);
+  z-index: 10;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding-top: 130px;
+}
+
+.hero-mega-title {
+  position: relative;
+  left: 50%;
+  width: max-content;
+  max-width: none;
+  padding: 0;
+  margin: 0 0 18px;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: clamp(70px, 10.8vw, 210px);
+  font-weight: 900;
+  letter-spacing: -0.08em;
+  line-height: 0.85;
+  text-align: center;
+  text-transform: uppercase;
+  color: #050505;
+  white-space: nowrap;
+  opacity: 0;
+  translate: -54% 0;
+  transform: translateY(-60px);
+  animation: megaTitleIn 1s cubic-bezier(.16,1,.3,1) .12s forwards;
+  will-change: opacity, transform;
+}
+
+.hero-mega-title span {
+  display: inline-block;
+  font-size: 0.35em;
+  vertical-align: middle;
+  margin: 0 0.05em;
+  letter-spacing: -0.04em;
+}
+
+.hero-text-top {
+  font-size: clamp(13px,1.4vw,15px);
+  font-weight: 700;
+  color: rgba(10,10,10,.68);
+  letter-spacing: .04em;
+  text-align: center;
+  max-width: 480px;
+  margin-bottom: 28px;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity .5s ease, transform .5s ease;
+}
+
+.hero-image-wrap {
+  position: relative;
+  z-index: 3;
+  width: 260px;
+  will-change: width, transform;
+}
+
+.hero-image-container {
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 28px 70px rgba(0,0,0,.10);
+  background: #e9e3d8;
+  will-change: border-radius, box-shadow;
+}
+
+.hero-image-inner {
+  width: 100%;
+}
+
+.hero-main-img {
+  width: 100%;
+  height: 520px;
+  object-fit: cover;
+  object-position: center 58%;
+  display: block;
+  transform: translateY(-300px) scale(2.35);
+  transform-origin: center 58%;
+  will-change: height, transform, object-position;
+  user-select: none;
+  background: #e9e3d8;
+}
+
+.hero-image-shine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 38%;
+  background: linear-gradient(to bottom, rgba(255,255,255,.22), transparent);
+  border-radius: 22px 22px 0 0;
+  pointer-events: none;
+  z-index: 4;
+}
+
+.hero-text-bottom {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(15px,1.6vw,18px);
+  font-style: italic;
+  font-weight: 400;
+  color: rgba(10,10,10,.55);
+  text-align: center;
+  max-width: 400px;
+  margin-top: 28px;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity .5s ease, transform .5s ease;
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: rgba(15,25,41,.28);
+  opacity: 1;
+  transition: opacity .5s ease;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.scroll-hint svg {
+  animation: bounceD 2.2s ease-in-out infinite;
+}
+
+@keyframes bounceD {
+  0%,100% { transform: translateY(0) translateX(-50%); }
+  50% { transform: translateY(5px) translateX(-50%); }
+}
+
+@keyframes megaTitleIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media(max-width:900px) {
+  .hero-content {
+    padding-top: 110px;
+  }
+
+  .hero-mega-title {
+    left: auto;
+    width: auto;
+    font-size: clamp(58px, 16vw, 128px);
+    line-height: .88;
+    margin-bottom: 16px;
+    padding: 0 18px;
+    white-space: normal;
+    translate: 0 0;
+  }
+
+  .hero-image-wrap {
+    width: 240px;
+  }
+
+  .hero-main-img {
+    height: 490px;
+  }
+}
+
+@media(max-width:600px) {
+  .hero-content {
+    padding-top: 100px;
+  }
+
+  .hero-mega-title {
+    font-size: clamp(50px, 18vw, 92px);
+    padding: 0 14px;
+  }
+
+  .hero-image-wrap {
+    width: 220px;
+  }
+
+  .hero-main-img {
+    height: 450px;
+  }
+}
+
+/* PRESENTATION */
+.presentation {
+  padding: 120px 0 100px;
+  background: var(--white);
+}
+
+.sec-label {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 18px;
+}
+
+.sec-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(34px,5vw,58px);
+  font-weight: 400;
+  line-height: 1.10;
+  letter-spacing: -.025em;
+  color: var(--navy);
+  margin-bottom: 26px;
+  max-width: 680px;
+}
+
+.sec-title em {
+  font-style: italic;
+  color: var(--blue);
+}
+
+.pres-body {
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--gray);
+  line-height: 1.82;
+  max-width: 580px;
+  margin-bottom: 40px;
+}
+
+.ctas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 64px;
+}
+
+.btn-primary {
+  padding: 14px 32px;
+  background: var(--navy);
+  color: #fff;
+  border: none;
+  border-radius: 100px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all .25s;
+}
+
+.btn-primary:hover {
+  background: var(--blue);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(37,99,235,.28);
+}
+
+.btn-outline {
+  padding: 14px 32px;
+  background: transparent;
+  color: var(--navy);
+  border: 1.5px solid var(--gray-line);
+  border-radius: 100px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all .25s;
+}
+
+.btn-outline:hover {
+  background: var(--off-white);
+  border-color: rgba(15,25,41,.28);
+  transform: translateY(-1px);
+}
+
+/* STATS */
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  padding: 30px 38px;
+  background: var(--off-white);
+  border: 1px solid var(--gray-line);
+  border-radius: var(--r);
+  max-width: 580px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.stat-num {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 30px;
+  font-weight: 500;
+  color: var(--navy);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--gray);
+}
+
+.stat-div {
+  width: 1px;
+  height: 36px;
+  background: var(--gray-line);
+  flex-shrink: 0;
+}
+
+@media(max-width:600px) {
+  .stat-row {
+    flex-direction: column;
+    gap: 18px;
+    padding: 22px 20px;
+    align-items: flex-start;
+  }
+
+  .stat-div {
+    width: 100%;
+    height: 1px;
+  }
+}
+
+/* ADVANTAGES */
+.advantages {
+  padding: 100px 0;
+  background: var(--off-white);
+}
+
+.adv-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 20px;
+  margin-top: 52px;
+}
+
+@media(max-width:860px) {
+  .adv-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+.adv-card {
+  background: #fff;
+  border: 1px solid var(--gray-line);
+  border-radius: 20px;
+  padding: 36px 28px 28px;
+  transition: all .32s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+}
+
+.adv-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,rgba(37,99,235,.03) 0%,transparent 55%);
+  opacity: 0;
+  transition: opacity .3s;
+}
+
+.adv-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 60px rgba(15,25,41,.11);
+  border-color: rgba(37,99,235,.13);
+}
+
+.adv-card:hover::after {
+  opacity: 1;
+}
+
+.adv-icon {
+  width: 52px;
+  height: 52px;
+  background: var(--blue-light);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  color: var(--blue);
+  transition: background .2s, transform .2s;
+}
+
+.adv-card:hover .adv-icon {
+  background: var(--blue);
+  color: #fff;
+  transform: scale(1.06);
+}
+
+.adv-card h3 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--navy);
+  margin-bottom: 12px;
+  letter-spacing: -.01em;
+}
+
+.adv-card p {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--gray);
+  line-height: 1.74;
+  margin-bottom: 24px;
+}
+
+.adv-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--blue);
+  text-decoration: none;
+}
+
+.adv-link:hover {
+  opacity: .72;
+}
+
+/* SPACES */
+.spaces {
+  padding: 100px 0;
+  background: var(--navy);
+}
+
+.spaces .sec-label {
+  color: rgba(219,234,254,.55);
+}
+
+.spaces .sec-title {
+  color: #fff;
+}
+
+.sp-subtitle {
+  font-size: 15px;
+  font-weight: 300;
+  color: rgba(255,255,255,.38);
+  margin-top: 8px;
+  margin-bottom: 52px;
+}
+
+.sp-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 20px;
+}
+
+@media(max-width:860px) {
+  .sp-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}
+
+.sp-card {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 20px;
+  padding: 32px 26px;
+  transition: all .32s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.sp-card:hover {
+  background: rgba(255,255,255,.08);
+  border-color: rgba(255,255,255,.18);
+  transform: translateY(-5px);
+  box-shadow: 0 28px 56px rgba(0,0,0,.22);
+}
+
+.sp-card.owner {
+  border-color: rgba(37,99,235,.45);
+  background: rgba(37,99,235,.10);
+}
+
+.sp-card.owner:hover {
+  border-color: rgba(37,99,235,.7);
+  background: rgba(37,99,235,.16);
+}
+
+.sp-popular {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: var(--blue);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 100px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.sp-card-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.sp-icon {
+  width: 46px;
+  height: 46px;
+  background: rgba(255,255,255,.08);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,.65);
+  flex-shrink: 0;
+}
+
+.sp-card.owner .sp-icon {
+  background: rgba(37,99,235,.22);
+  color: #93C5FD;
+}
+
+.sp-role {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.32);
+}
+
+.sp-card.owner .sp-role {
+  color: #93C5FD;
+}
+
+.sp-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 10px;
+  letter-spacing: -.01em;
+}
+
+.sp-card p {
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(255,255,255,.42);
+  line-height: 1.72;
+  margin-bottom: 20px;
+}
+
+.sp-feats {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 26px;
+}
+
+.sp-feats li {
+  font-size: 13px;
+  color: rgba(255,255,255,.46);
+}
+
+.sp-btn {
+  display: inline-block;
+  padding: 11px 24px;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 100px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: #fff;
+  text-decoration: none;
+  transition: all .25s;
+}
+
+.sp-btn:hover {
+  background: rgba(255,255,255,.1);
+  border-color: rgba(255,255,255,.4);
+}
+
+.sp-btn.owner {
+  background: var(--blue);
+  border-color: var(--blue);
+}
+
+.sp-btn.owner:hover {
+  background: #1D4ED8;
+  border-color: #1D4ED8;
+  box-shadow: 0 8px 24px rgba(37,99,235,.4);
+}
+
+/* FOOTER */
+.site-footer {
+  background: var(--navy);
+  border-top: 1px solid rgba(255,255,255,.06);
+  padding: 52px 0 26px;
+}
+
+.footer-inner {
+  display: flex;
+  gap: 60px;
+  margin-bottom: 44px;
+}
+
+.footer-brand {
+  flex: 1;
+}
+
+.footer-logo {
+  font-weight: 700;
+  font-size: 16px;
+  color: #fff;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.footer-logo em {
+  font-style: normal;
+  color: #60A5FA;
+}
+
+.footer-logo .site-logo-img {
+  height: 30px;
+}
+
+.footer-brand p {
+  font-size: 13px;
+  color: rgba(255,255,255,.32);
+  max-width: 230px;
+  line-height: 1.7;
+}
+
+.footer-links {
+  display: flex;
+  gap: 52px;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.footer-col h4 {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.22);
+  margin-bottom: 5px;
+}
+
+.footer-col a {
+  font-size: 13px;
+  color: rgba(255,255,255,.42);
+  text-decoration: none;
+  transition: color .2s;
+}
+
+.footer-col a:hover {
+  color: #fff;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,.07);
+  padding-top: 22px;
+  font-size: 12px;
+  color: rgba(255,255,255,.2);
+}
+
+@media(max-width:768px) {
+  .footer-inner {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .footer-links {
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+}
+
+/* REVEAL */
+.ri {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .65s ease, transform .65s ease;
+  transition-delay: var(--d, 0s);
+}
+
+.ri.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.theme-toggle-btn {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: #0f172a;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  z-index: 9999;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.25s ease;
+}
+
+.theme-toggle-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  background: #2563eb;
+}
+
+body.dark-mode {
+  background: #0f172a !important;
+  color: #e5e7eb;
+}
+
+body.dark-mode .hero-sticky,
+body.dark-mode .presentation,
+body.dark-mode .advantages {
+  background: #0f172a !important;
+  color: #e5e7eb !important;
+}
+
+body.dark-mode .hero-mega-title {
+  color: #f9fafb !important;
+}
+
+body.dark-mode .site-header {
+  background: transparent !important;
+}
+
+body.dark-mode .site-header .site-logo-img {
+  filter: invert(1);
+}
+
+body.dark-mode .site-header .header-nav a {
+  color: #e5e7eb !important;
+}
+
+body.dark-mode .site-header .header-nav a:hover {
+  color: #fff !important;
+}
+
+body.dark-mode .site-header .btn-ghost {
+  border-color: rgba(248,247,240,0.48);
+  color: #F8F7F0;
+}
+
+body.dark-mode .site-header .btn-solid {
+  background: #fff;
+  color: #0A0A0A;
+}
+
+body.dark-mode .site-header .burger span {
+  background: #F8F7F0;
+}
+
+body.dark-mode .hero-image-container,
+body.dark-mode .hero-main-img {
+  background: #111827 !important;
+}
+
+body.dark-mode .site-header.scrolled,
+body.dark-mode .mobile-nav {
+  background: rgba(17, 24, 39, 0.94) !important;
+  border-color: #1f2937 !important;
+}
+
+body.dark-mode .adv-card,
+body.dark-mode .stat-row {
+  background: #111827 !important;
+  border-color: #1f2937 !important;
+  color: #e5e7eb !important;
+}
+
+body.dark-mode .sec-title,
+body.dark-mode .adv-card h3,
+body.dark-mode .stat-num,
+body.dark-mode .header-nav a:hover,
+body.dark-mode .mobile-nav a,
+body.dark-mode .btn-outline {
+  color: #f9fafb !important;
+}
+
+body.dark-mode .hero-text-top,
+body.dark-mode .hero-text-bottom,
+body.dark-mode .pres-body,
+body.dark-mode .adv-card p,
+body.dark-mode .stat-label,
+body.dark-mode .sp-subtitle,
+body.dark-mode .header-nav a {
+  color: #cbd5e1 !important;
+}
+</style>
+<link rel="stylesheet" href="{% static 'css/dark-sidebar-fixes.css' %}?v=20260518-5">
+</head>
+
+<body>
+
+<header class="site-header" id="siteHeader">
+  <div class="header-inner">
+
+    <a href="{% url 'accounts:accueil' %}" class="header-logo site-logo-link">
+      <img src="{% static 'images/logo.png' %}" alt="Logement Immobilier" class="site-logo-img">
+    </a>
+
+    <nav class="header-nav">
+      <a href="#hero">Accueil</a>
+      <a href="#presentation">Présentation</a>
+      <a href="#avantages">Avantages</a>
+      <a href="#espaces">Espaces</a>
+      <a href="#footer">Contact</a>
+    </nav>
+
+    <div class="header-actions">
+      <a href="{% url 'accounts:login' %}" class="btn-ghost">Connexion</a>
+      <a href="{% url 'accounts:register' %}" class="btn-solid">S'inscrire</a>
+    </div>
+
+    <button class="burger" id="burger" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+  </div>
+
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#hero">Accueil</a>
+    <a href="#presentation">Présentation</a>
+    <a href="#avantages">Avantages</a>
+    <a href="#espaces">Espaces</a>
+    <a href="{% url 'accounts:login' %}">Connexion</a>
+    <a href="{% url 'accounts:register' %}" class="btn-solid" style="margin-top:8px;width:fit-content">S'inscrire</a>
+  </div>
+</header>
+
+<section class="hero" id="hero">
+
+  <div class="hero-sticky">
+
+    <div class="hero-content">
+
+      <h1 class="hero-mega-title" id="heroMegaTitle">
+        LOCATION <span></span> IMMOBILIER
+      </h1>
+
+      <p class="hero-text-top" id="heroTop">
+        Trouvez votre prochain logement en quelques clics.
+      </p>
+
+      <div class="hero-image-wrap" id="heroWrap">
+        <div class="hero-image-container" id="heroContainer">
+          <div class="hero-image-inner" id="heroInner">
+
+            <img
+              src="{% static 'images/bg-image.png' %}"
+              alt="Logement Immobilier"
+              id="heroImg"
+              class="hero-main-img"
+            >
+
+          </div>
+        </div>
+
+        <div class="hero-image-shine" id="heroShine"></div>
+      </div>
+
+      <p class="hero-text-bottom" id="heroBottom">
+        Chaque annonce peut devenir une nouvelle adresse.
+      </p>
+
+    </div>
+
+    <div class="scroll-hint" id="scrollHint">
+      <span>Défiler</span>
+      <svg width="14" height="18" viewBox="0 0 14 18" fill="none">
+        <path d="M7 1v12M1 9l6 7 6-7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+  </div>
+</section>
+
+<section class="presentation" id="presentation">
+  <div class="container">
+
+    <div class="sec-label ri">Plateforme immobilière</div>
+
+    <h2 class="sec-title ri" style="--d:.08s">
+      Une nouvelle façon<br>
+      <em>de chercher un logement</em>
+    </h2>
+
+    <p class="pres-body ri" style="--d:.16s">
+      Logement Immobilier centralise les annonces de location et simplifie la communication
+      entre propriétaires et visiteurs. Grâce à une recherche intuitive, des photos détaillées,
+      une carte interactive et un système de demande de visite, chaque utilisateur peut trouver
+      plus facilement le logement qui lui correspond.
+    </p>
+
+    <div class="ctas ri" style="--d:.22s">
+      <a href="{% url 'accounts:login' %}?role=visiteur" class="btn-primary">
+        Rechercher un logement
+      </a>
+
+      <a href="{% url 'accounts:login' %}?role=proprietaire" class="btn-outline">
+        Publier une annonce
+      </a>
+    </div>
+
+    <div class="stat-row ri" style="--d:.28s">
+      <div class="stat-item">
+        <span class="stat-num">100+</span>
+        <span class="stat-label">Annonces disponibles</span>
+      </div>
+
+      <div class="stat-div"></div>
+
+      <div class="stat-item">
+        <span class="stat-num">20+</span>
+        <span class="stat-label">Villes couvertes</span>
+      </div>
+
+      <div class="stat-div"></div>
+
+      <div class="stat-item">
+        <span class="stat-num">24h</span>
+        <span class="stat-label">Demandes de visite</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="advantages" id="avantages">
+  <div class="container">
+
+    <div class="sec-label ri">Pourquoi nous choisir</div>
+
+    <h2 class="sec-title ri" style="--d:.08s">
+      Tout ce dont vous avez besoin,<br>
+      <em>au même endroit</em>
+    </h2>
+
+    <div class="adv-grid">
+
+      <div class="adv-card ri" style="--d:0s">
+        <div class="adv-icon">
+          <i class="bx bx-search"></i>
+        </div>
+
+        <h3>Recherche rapide</h3>
+
+        <p>
+          Filtrez par ville, type de bien, budget et surface. Trouvez le logement idéal
+          en quelques secondes grâce à notre moteur de recherche.
+        </p>
+
+        <a href="{% url 'accounts:login' %}?role=visiteur" class="adv-link">
+          Explorer les annonces →
+        </a>
+      </div>
+
+      <div class="adv-card ri" style="--d:.12s">
+        <div class="adv-icon">
+          <i class="bx bxs-map"></i>
+        </div>
+
+        <h3>Carte interactive</h3>
+
+        <p>
+          Visualisez les biens sur une carte grâce à Leaflet et OpenStreetMap pour mieux
+          comprendre la localisation exacte.
+        </p>
+
+        <a href="{% url 'accounts:login' %}?role=visiteur" class="adv-link">
+          Voir la carte →
+        </a>
+      </div>
+
+      <div class="adv-card ri" style="--d:.24s">
+        <div class="adv-icon">
+          <i class="bx bx-calendar"></i>
+        </div>
+
+        <h3>Demande de visite</h3>
+
+        <p>
+          Envoyez une demande de visite en ligne. Le propriétaire reçoit votre message
+          et peut accepter ou refuser votre demande.
+        </p>
+
+        <a href="{% url 'accounts:login' %}?role=visiteur" class="adv-link">
+          Planifier une visite →
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="spaces" id="espaces">
+  <div class="container">
+
+    <div class="sec-label ri">Accès personnalisé</div>
+
+    <h2 class="sec-title ri" style="--d:.08s">
+      Choisissez votre espace
+    </h2>
+
+    <p class="sp-subtitle ri" style="--d:.14s">
+      Une interface dédiée à chaque profil d'utilisateur.
+    </p>
+
+    <div class="sp-grid">
+
+      <div class="sp-card ri" style="--d:0s">
+        <div class="sp-card-top">
+          <div class="sp-icon"><i class="bx bxs-user"></i></div>
+          <span class="sp-role">Visiteur</span>
+        </div>
+
+        <h3>Espace visiteur</h3>
+
+        <p>
+          Recherchez des logements, sauvegardez vos favoris et demandez des visites en quelques clics.
+        </p>
+
+        <ul class="sp-feats">
+          <li><i class="bx bx-check"></i> Recherche avancée</li>
+          <li><i class="bx bx-check"></i> Gestion des favoris</li>
+          <li><i class="bx bx-check"></i> Demandes de visite</li>
+          <li><i class="bx bx-check"></i> Consultation des annonces</li>
+        </ul>
+
+        <a href="{% url 'accounts:login' %}?role=visiteur" class="sp-btn">
+          Accéder →
+        </a>
+      </div>
+
+      <div class="sp-card owner ri" style="--d:.13s">
+        <div class="sp-popular">Populaire</div>
+
+        <div class="sp-card-top">
+          <div class="sp-icon"><i class="bx bxs-home"></i></div>
+          <span class="sp-role">Propriétaire</span>
+        </div>
+
+        <h3>Espace propriétaire</h3>
+
+        <p>
+          Publiez vos annonces, gérez vos biens, suivez les visites et communiquez avec les visiteurs.
+        </p>
+
+        <ul class="sp-feats">
+          <li><i class="bx bx-check"></i> Publication d'annonces</li>
+          <li><i class="bx bx-check"></i> Tableau de bord</li>
+          <li><i class="bx bx-check"></i> Gestion des visites</li>
+          <li><i class="bx bx-check"></i> Suivi des demandes</li>
+        </ul>
+
+        <a href="{% url 'accounts:login' %}?role=proprietaire" class="sp-btn owner">
+          Accéder →
+        </a>
+      </div>
+
+      <div class="sp-card ri" style="--d:.26s">
+        <div class="sp-card-top">
+          <div class="sp-icon"><i class="bx bx-shield-alt-2"></i>️</div>
+          <span class="sp-role">Administrateur</span>
+        </div>
+
+        <h3>Espace administrateur</h3>
+
+        <p>
+          Supervisez la plateforme, modérez les annonces et gérez les signalements.
+        </p>
+
+        <ul class="sp-feats">
+          <li><i class="bx bx-check"></i> Gestion des utilisateurs</li>
+          <li><i class="bx bx-check"></i> Modération des annonces</li>
+          <li><i class="bx bx-check"></i> Signalements</li>
+          <li><i class="bx bx-check"></i> Validation des biens</li>
+        </ul>
+
+        <a href="{% url 'accounts:login' %}?role=admin" class="sp-btn">
+          Accéder →
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer" id="footer">
+  <div class="container">
+
+    <div class="footer-inner">
+
+      <div class="footer-brand">
+        <a href="{% url 'accounts:accueil' %}" class="footer-logo site-logo-link">
+          <img src="{% static 'images/logo.png' %}" alt="Logement Immobilier" class="site-logo-img">
+        </a>
+        <p>La plateforme de location immobilière moderne au Maroc.</p>
+      </div>
+
+      <div class="footer-links">
+
+        <div class="footer-col">
+          <h4>Plateforme</h4>
+          <a href="{% url 'accounts:login' %}?role=visiteur">Annonces</a>
+          <a href="{% url 'accounts:login' %}?role=visiteur">Carte</a>
+          <a href="{% url 'accounts:login' %}?role=visiteur">Favoris</a>
+          <a href="{% url 'accounts:login' %}?role=visiteur">Demandes</a>
+        </div>
+
+        <div class="footer-col">
+          <h4>Compte</h4>
+          <a href="{% url 'accounts:login' %}">Connexion</a>
+          <a href="{% url 'accounts:register' %}">Inscription</a>
+          <a href="{% url 'accounts:login' %}?role=proprietaire">Tableau de bord</a>
+        </div>
+
+        <div class="footer-col">
+          <h4>Espaces</h4>
+          <a href="{% url 'accounts:login' %}?role=visiteur">Visiteur</a>
+          <a href="{% url 'accounts:login' %}?role=proprietaire">Propriétaire</a>
+          <a href="{% url 'accounts:login' %}?role=admin">Administrateur</a>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      © 2026 Logement Immobilier. Tous droits réservés.
+    </div>
+
+  </div>
+</footer>
+
+<button id="themeToggle" class="theme-toggle-btn" type="button" title="Changer le thème">
+  <i class="bx bx-moon"></i>
+</button>
+
+<script src="{% static 'js/main.js' %}?v=20260518"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  var header = document.getElementById('siteHeader');
+  var hero = document.getElementById('hero');
+  var heroWrap = document.getElementById('heroWrap');
+  var heroContainer = document.getElementById('heroContainer');
+  var heroImg = document.getElementById('heroImg');
+  var megaTitle = document.getElementById('heroMegaTitle');
+  var heroTop = document.getElementById('heroTop');
+  var heroBot = document.getElementById('heroBottom');
+  var heroShine = document.getElementById('heroShine');
+  var hint = document.getElementById('scrollHint');
+  var burger = document.getElementById('burger');
+  var mobileNav = document.getElementById('mobileNav');
+
+  function onScroll() {
+    if (header) {
+      header.classList.toggle('scrolled', window.scrollY > 50);
+    }
+
+    updateImageAnimation();
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  var W_START = 260;
+  var H_START = 520;
+  var BR_START = 8;
+  var IMG_ZOOM_START = 2.35;
+  var IMG_SHIFT_START = -300;
+
+  function updateImageAnimation() {
+    if (!hero || !heroWrap) return;
+
+    var heroRect = hero.getBoundingClientRect();
+    var heroHeight = hero.offsetHeight;
+    var vw = window.innerWidth;
+    var vh = window.innerHeight;
+    var scrollableZone = heroHeight - vh;
+    var scrollRelative = -heroRect.top;
+    var scrollPhase = Math.max(0, Math.min(scrollRelative, scrollableZone));
+    var progress = Math.min(scrollPhase / scrollableZone, 1);
+    var easedProgress = 1 - Math.pow(1 - progress, 3);
+    var startW = W_START;
+    var startH = H_START;
+
+    if (vw <= 600) {
+      startW = 220;
+      startH = 450;
+    } else if (vw <= 900) {
+      startW = 240;
+      startH = 490;
+    }
+
+    var newW = startW + (vw - startW) * easedProgress;
+    heroWrap.style.width = newW + 'px';
+
+    var newH = startH + (vh * 0.95 - startH) * easedProgress;
+
+    if (heroImg) {
+      heroImg.style.height = newH + 'px';
+      var imgZoom = IMG_ZOOM_START - (IMG_ZOOM_START - 1) * easedProgress;
+      var imgShift = IMG_SHIFT_START * (1 - easedProgress);
+      heroImg.style.transform = 'translateY(' + imgShift + 'px) scale(' + imgZoom + ')';
+      /* Le point de recadrage reste fixe au centre : le faire varier pendant
+         le scroll (comme avant) provoquait un recadrage transitoire ou le
+         haut de la porte/l'enseigne se retrouvait coupe. */
+      heroImg.style.transformOrigin = 'center 50%';
+      heroImg.style.objectPosition = 'center 50%';
+    }
+
+    var br = Math.max(0, BR_START * (1 - easedProgress));
+
+    if (heroContainer) {
+      heroContainer.style.borderRadius = br + 'px';
+      var sh = 0.14 * (1 - easedProgress);
+      heroContainer.style.boxShadow = '0 24px 64px rgba(15,25,41,' + sh + ')';
+    }
+
+    if (heroShine) {
+      heroShine.style.borderRadius = br + 'px ' + br + 'px 0 0';
+    }
+
+    var textProgress = Math.max(0, (easedProgress - 0.1) / 0.4);
+    textProgress = Math.min(1, textProgress);
+
+    var tOp = 1 - textProgress;
+    var tTy = -15 * textProgress;
+
+    [heroTop, heroBot].forEach(function (el) {
+      if (!el) return;
+      el.style.opacity = tOp;
+      el.style.transform = 'translateY(' + tTy + 'px)';
+    });
+
+    if (megaTitle) {
+      var titleProgress = Math.max(0, easedProgress / 0.34);
+      titleProgress = Math.min(1, titleProgress);
+      megaTitle.style.opacity = 1 - titleProgress;
+      megaTitle.style.transform = 'translateY(' + (-70 * titleProgress) + 'px)';
+    }
+
+    var hintOp = Math.max(0, 1 - easedProgress / 0.15);
+
+    if (hint) {
+      hint.style.opacity = hintOp;
+    }
+
+    var parallax = -scrollRelative * 0.1;
+    heroWrap.style.transform = 'translateY(' + parallax + 'px)';
+  }
+
+  updateImageAnimation();
+
+  var items = document.querySelectorAll('.ri');
+
+  if ('IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          obs.unobserve(e.target);
+        }
+      });
+    }, {
+      threshold: 0.12,
+      rootMargin: '0px 0px -36px 0px'
+    });
+
+    items.forEach(function (el) {
+      obs.observe(el);
+    });
+  } else {
+    items.forEach(function (el) {
+      el.classList.add('in');
+    });
+  }
+
+  if (burger && mobileNav) {
+    burger.addEventListener('click', function () {
+      var open = mobileNav.classList.toggle('open');
+      var spans = burger.querySelectorAll('span');
+
+      if (open) {
+        spans[0].style.transform = 'translateY(6.5px) rotate(45deg)';
+        spans[1].style.opacity = '0';
+        spans[2].style.transform = 'translateY(-6.5px) rotate(-45deg)';
+      } else {
+        spans[0].style.transform = '';
+        spans[1].style.opacity = '';
+        spans[2].style.transform = '';
+      }
+    });
+
+    mobileNav.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        mobileNav.classList.remove('open');
+
+        var spans = burger.querySelectorAll('span');
+        spans[0].style.transform = '';
+        spans[1].style.opacity = '';
+        spans[2].style.transform = '';
+      });
+    });
+  }
+
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var id = this.getAttribute('href');
+
+      if (id === '#') return;
+
+      var target = document.querySelector(id);
+
+      if (target) {
+        e.preventDefault();
+
+        var top = target.getBoundingClientRect().top + window.scrollY - (header ? header.offsetHeight : 68);
+
+        window.scrollTo({
+          top: top,
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
+
+})();
+</script>
+
+</body>
+</html>

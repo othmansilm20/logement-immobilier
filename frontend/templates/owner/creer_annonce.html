@@ -1,0 +1,419 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Créer une annonce{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+<style>
+  .map-search-wrapper {
+    position: relative;
+  }
+
+  .map-search-results {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    margin-top: 4px;
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
+    max-height: 220px;
+    overflow-y: auto;
+  }
+
+  .map-search-results.active {
+    display: block;
+  }
+
+  .map-search-result-item {
+    padding: 10px 14px;
+    font-size: 14px;
+    cursor: pointer;
+    border-bottom: 1px solid #f1f5f9;
+  }
+
+  .map-search-result-item:last-child {
+    border-bottom: none;
+  }
+
+  .map-search-result-item:hover {
+    background: #f8fafc;
+  }
+
+  .map-search-status {
+    padding: 8px 14px;
+    font-size: 13px;
+    color: #64748b;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="create-modern-page">
+
+  {% include "includes/sidebar_owner.html" with active="creer" %}
+
+  <main class="create-modern-main">
+
+    <div class="create-breadcrumb">
+      <i class="bx bxs-home"></i> Accueil › Mes Annonces › Créer une annonce
+    </div>
+
+    <h1 class="create-main-title">
+      {% if annonce %}
+        Modifier l’annonce
+      {% else %}
+        Créer une nouvelle annonce
+      {% endif %}
+    </h1>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="create-modern-grid">
+
+        <div class="create-left">
+
+          <section class="create-card">
+            <h2><i class="bx bx-file"></i> 1. Informations générales</h2>
+
+            <div class="form-field">
+              <label>Titre <span>*</span></label>
+              {{ form.titre }}
+            </div>
+
+            <div class="form-field">
+              <label>Description <span>*</span></label>
+              {{ form.description }}
+            </div>
+
+            <div class="form-field">
+              <label>Type de bien <span>*</span></label>
+              {{ form.type_bien }}
+            </div>
+          </section>
+
+          <section class="create-card">
+            <h2><i class="bx bx-building"></i> 2. Détails du bien</h2>
+
+            <div class="two-cols">
+              <div class="form-field">
+                <label>Prix <span>*</span></label>
+                {{ form.prix }}
+              </div>
+
+              <div class="form-field">
+                <label>Surface <span>*</span></label>
+                {{ form.surface }}
+              </div>
+            </div>
+
+            <div class="two-cols">
+              <div class="form-field">
+                <label>Localisation <span>*</span></label>
+                {{ form.adresse }}
+              </div>
+
+              <div class="form-field">
+                <label>Ville <span>*</span></label>
+                {{ form.ville }}
+              </div>
+            </div>
+          </section>
+
+          <section class="create-card">
+  <h2><i class="bx bx-camera"></i> 3. Photos</h2>
+
+  <div class="photos-modern-row">
+
+    <label for="id_photos" class="photo-drop-zone">
+      <div class="photo-upload-icon"><i class="bx bx-cloud-upload"></i>️</div>
+      <p>Glissez-déposez vos photos ici</p>
+      <small>ou</small>
+      <span>Ajouter des photos</span>
+    </label>
+
+    <input
+      type="file"
+      name="photos"
+      id="id_photos"
+      multiple
+      accept="image/*"
+      hidden
+    >
+
+    <div id="photoPreview" class="photo-preview-row"></div>
+
+  </div>
+
+  <div class="photo-bottom-info">
+    <span>Formats acceptés : JPG, PNG, WEBP — Max. 10 Mo par fichier</span>
+    <span id="photoCount">0 photo téléchargée</span>
+  </div>
+</section>
+
+        </div>
+
+        <div class="create-right">
+
+          <section class="create-card map-create-card">
+
+            <div class="map-search-wrapper">
+              <input
+                type="text"
+                id="map-search"
+                class="map-search-modern"
+                placeholder="Rechercher une adresse..."
+                autocomplete="off"
+              >
+              <div id="map-search-results" class="map-search-results"></div>
+            </div>
+
+            <div id="map" class="create-map"></div>
+
+            <p class="map-help-modern">
+              ℹ️ Cliquez sur la carte pour sélectionner une localisation
+            </p>
+
+            {{ form.latitude }}
+            {{ form.longitude }}
+
+          </section>
+
+          <section class="create-card">
+            <h2><i class="bx bx-purchase-tag"></i>️ 4. Statut</h2>
+
+            <p class="status-help">Sélectionnez le statut de votre annonce</p>
+
+            <div class="status-options">
+              <label>
+                <input type="radio" name="action" value="brouillon" checked>
+                <div>
+                  <strong>Brouillon</strong>
+                  <span>Votre annonce est enregistrée et reste privée.</span>
+                </div>
+              </label>
+
+              <label>
+                <input type="radio" name="action" value="soumettre">
+                <div>
+                  <strong>En attente de validation</strong>
+                  <span>Votre annonce sera examinée par notre équipe.</span>
+                </div>
+              </label>
+            </div>
+          </section>
+
+        </div>
+
+      </div>
+
+      <div class="create-actions-modern">
+        <button type="submit" name="action" value="brouillon" class="btn-draft">
+          <i class="bx bx-save"></i> Sauvegarder en brouillon
+        </button>
+
+        <button type="submit" name="action" value="soumettre" class="btn-submit-modern">
+          <i class="bx bx-send"></i> Soumettre pour validation
+        </button>
+
+        <a href="{% url 'properties:mes_annonces' %}" class="btn-cancel-modern">
+          Annuler
+        </a>
+      </div>
+
+    </form>
+
+  </main>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  var defaultLat = 31.7917;
+  var defaultLng = -7.0926;
+
+  var latInput = document.getElementById("id_latitude");
+  var lngInput = document.getElementById("id_longitude");
+
+  var startLat = latInput && latInput.value ? parseFloat(latInput.value) : defaultLat;
+  var startLng = lngInput && lngInput.value ? parseFloat(lngInput.value) : defaultLng;
+
+  var map = L.map("map").setView([startLat, startLng], 6);
+
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
+    attribution: "Tiles &copy; Esri",
+    maxZoom: 19
+  }).addTo(map);
+
+  var marker = L.marker([startLat, startLng], {
+    draggable: true
+  }).addTo(map);
+
+  function updateInputs(lat, lng) {
+    if (latInput) latInput.value = lat;
+    if (lngInput) lngInput.value = lng;
+  }
+
+  updateInputs(startLat, startLng);
+
+  map.on("click", function (e) {
+    marker.setLatLng(e.latlng);
+    updateInputs(e.latlng.lat, e.latlng.lng);
+  });
+
+  marker.on("dragend", function () {
+    var pos = marker.getLatLng();
+    updateInputs(pos.lat, pos.lng);
+  });
+
+  setTimeout(function () {
+    map.invalidateSize();
+  }, 300);
+
+  // Recherche d'adresse (geocodage via Nominatim / OpenStreetMap)
+  var searchInput = document.getElementById("map-search");
+  var resultsBox = document.getElementById("map-search-results");
+  var searchTimeout = null;
+
+  function hideResults() {
+    resultsBox.innerHTML = "";
+    resultsBox.classList.remove("active");
+  }
+
+  function showStatus(text) {
+    resultsBox.innerHTML = '<div class="map-search-status">' + text + "</div>";
+    resultsBox.classList.add("active");
+  }
+
+  function selectPlace(lat, lng, label) {
+    map.setView([lat, lng], 16);
+    marker.setLatLng([lat, lng]);
+    updateInputs(lat, lng);
+    searchInput.value = label;
+    hideResults();
+  }
+
+  function searchAddress(query) {
+    showStatus("Recherche en cours...");
+
+    var url = "https://nominatim.openstreetmap.org/search?format=json&limit=5&q=" + encodeURIComponent(query);
+
+    fetch(url, { headers: { "Accept-Language": "fr" } })
+      .then(function (response) { return response.json(); })
+      .then(function (results) {
+        if (!results || results.length === 0) {
+          showStatus("Aucun résultat trouvé.");
+          return;
+        }
+
+        resultsBox.innerHTML = "";
+
+        results.forEach(function (place) {
+          var item = document.createElement("div");
+          item.className = "map-search-result-item";
+          item.textContent = place.display_name;
+
+          item.addEventListener("click", function () {
+            selectPlace(parseFloat(place.lat), parseFloat(place.lon), place.display_name);
+          });
+
+          resultsBox.appendChild(item);
+        });
+
+        resultsBox.classList.add("active");
+      })
+      .catch(function () {
+        showStatus("Recherche indisponible pour le moment.");
+      });
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener("input", function () {
+      var query = searchInput.value.trim();
+
+      clearTimeout(searchTimeout);
+
+      if (query.length < 3) {
+        hideResults();
+        return;
+      }
+
+      searchTimeout = setTimeout(function () {
+        searchAddress(query);
+      }, 500);
+    });
+
+    searchInput.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        clearTimeout(searchTimeout);
+        var query = searchInput.value.trim();
+        if (query.length >= 3) {
+          searchAddress(query);
+        }
+      }
+    });
+
+    document.addEventListener("click", function (e) {
+      if (e.target !== searchInput && !resultsBox.contains(e.target)) {
+        hideResults();
+      }
+    });
+  }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const input = document.getElementById("id_photos");
+  const preview = document.getElementById("photoPreview");
+  const count = document.getElementById("photoCount");
+
+  if (!input || !preview) return;
+
+  input.addEventListener("change", function () {
+    preview.innerHTML = "";
+
+    const files = Array.from(input.files);
+
+    if (count) {
+      count.textContent = files.length + " photo" + (files.length > 1 ? "s" : "") + " téléchargée" + (files.length > 1 ? "s" : "");
+    }
+
+    files.forEach(function (file) {
+      if (!file.type.startsWith("image/")) return;
+
+      const reader = new FileReader();
+
+      reader.onload = function (e) {
+        const item = document.createElement("div");
+        item.className = "photo-preview-item";
+
+        item.innerHTML = `
+          <img src="${e.target.result}" alt="Photo">
+          <button type="button" class="photo-remove-btn">×</button>
+        `;
+
+        item.querySelector(".photo-remove-btn").addEventListener("click", function () {
+          item.remove();
+        });
+
+        preview.appendChild(item);
+      };
+
+      reader.readAsDataURL(file);
+    });
+  });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,254 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Détail annonce Admin{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+{% endblock %}
+
+{% block body %}
+
+<div class="admin-pro-layout">
+
+  {% include "includes/sidebar_admin.html" with active="toutes_annonces" %}
+
+  <main class="admin-pro-main">
+
+    <header class="admin-pro-topbar">
+      {% include "includes/user_profile_button.html" %}
+    </header>
+
+    <section class="admin-pro-content">
+
+      <div class="admin-pro-heading">
+        <div>
+          <h1 class="admin-pro-title">{{ annonce.titre }}</h1>
+          <p class="admin-pro-sub">Visualisation administrateur de l’annonce</p>
+        </div>
+
+        <div class="admin-pro-actions">
+
+          {% if annonce.statut == "en_attente" %}
+
+            <form method="post"
+                  action="{% url 'dashboard:admin_approuver' annonce.pk %}"
+                  onsubmit="return confirm('Voulez-vous approuver cette annonce ?');">
+              {% csrf_token %}
+              <button type="submit" class="admin-btn approve">
+                <i class="bx bx-check"></i> Approuver
+              </button>
+            </form>
+
+            <form method="post"
+                  action="{% url 'dashboard:admin_rejeter' annonce.pk %}"
+                  onsubmit="return confirm('Voulez-vous rejeter cette annonce ?');">
+              {% csrf_token %}
+              <button type="submit" class="admin-btn reject">
+                <i class="bx bx-x"></i> Rejeter
+              </button>
+            </form>
+
+          {% endif %}
+
+          {% if request.GET.next == "signalements" %}
+
+            <a href="{% url 'dashboard:admin_signalements' %}" class="admin-btn secondary">
+              Retour
+            </a>
+
+          {% elif request.GET.next == "validation" %}
+
+            <a href="{% url 'dashboard:admin_valider' %}" class="admin-btn secondary">
+              Retour
+            </a>
+
+          {% elif request.GET.next == "dashboard" %}
+
+            <a href="{% url 'dashboard:admin_dashboard' %}" class="admin-btn secondary">
+              Retour
+            </a>
+
+          {% else %}
+
+            <a href="{% url 'dashboard:admin_annonces' %}" class="admin-btn secondary">
+              Retour
+            </a>
+
+          {% endif %}
+
+        </div>
+      </div>
+
+      <div class="admin-detail-grid">
+
+        <div class="admin-pro-detail-card admin-detail-card">
+          <h2><i class="bx bx-camera"></i> Photos</h2>
+
+          <div class="admin-photo-main">
+            {% with photo=photos.first %}
+              {% if photo %}
+                <img src="{{ photo.image.url }}" alt="{{ annonce.titre }}">
+              {% else %}
+                <div><i class="bx bxs-home"></i></div>
+              {% endif %}
+            {% endwith %}
+          </div>
+
+          <div class="admin-thumb-row">
+            {% for photo in photos %}
+              <div class="admin-thumb">
+                <img src="{{ photo.image.url }}" alt="Photo">
+              </div>
+            {% empty %}
+              <div class="admin-thumb"><i class="bx bxs-home"></i></div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="admin-pro-detail-card admin-detail-card">
+          <h2><i class="bx bx-file"></i> Informations de l’annonce</h2>
+
+          <div class="admin-form-grid">
+            <div class="admin-detail-field">
+              <span>Titre</span>
+              <strong>{{ annonce.titre }}</strong>
+            </div>
+
+            <div class="admin-detail-field">
+              <span>Ville</span>
+              <strong>{{ annonce.ville }}</strong>
+            </div>
+
+            <div class="admin-detail-field">
+              <span>Adresse</span>
+              <strong>{{ annonce.adresse }}</strong>
+            </div>
+
+            <div class="admin-detail-field">
+              <span>Type</span>
+              <strong>{{ annonce.get_type_bien_display }}</strong>
+            </div>
+
+            <div class="admin-detail-field">
+              <span>Prix</span>
+              <strong>{{ annonce.prix|floatformat:0 }} DH</strong>
+            </div>
+
+            <div class="admin-detail-field">
+              <span>Surface</span>
+              <strong>{{ annonce.surface }} m²</strong>
+            </div>
+
+            <div class="admin-detail-field">
+              <span>Statut</span>
+              {% if annonce.statut == "publiee" %}
+                <strong class="status-user active">Publiée</strong>
+              {% elif annonce.statut == "en_attente" %}
+                <strong class="status-user pending">En attente</strong>
+              {% elif annonce.statut == "rejetee" %}
+                <strong class="status-user inactive">Rejetée</strong>
+              {% elif annonce.statut == "archivee" %}
+                <strong class="status-user archived">Archivée</strong>
+              {% elif annonce.statut == "brouillon" %}
+                <strong class="status-user draft">Brouillon</strong>
+              {% else %}
+                <strong class="status-user draft">{{ annonce.statut }}</strong>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="admin-detail-field">
+            <span>Description</span>
+            <strong>{{ annonce.description }}</strong>
+          </div>
+
+          <hr class="admin-divider">
+
+          <h3><i class="bx bxs-user"></i> Propriétaire</h3>
+
+          <div class="admin-form-grid">
+            <div class="admin-detail-field">
+              <span>Nom</span>
+              <strong>{{ annonce.proprietaire.get_full_name|default:annonce.proprietaire.username }}</strong>
+            </div>
+
+            <div class="admin-detail-field">
+              <span>Email</span>
+              <strong>
+                {% if annonce.proprietaire.email %}
+                  {{ annonce.proprietaire.email }}
+                {% else %}
+                  Non renseigné
+                {% endif %}
+              </strong>
+            </div>
+
+            {% if profil_proprietaire %}
+
+              {% if profil_proprietaire.telephone %}
+                <div class="admin-detail-field">
+                  <span>Téléphone</span>
+                  <strong>{{ profil_proprietaire.telephone }}</strong>
+                </div>
+              {% endif %}
+
+              {% if profil_proprietaire.ville %}
+                <div class="admin-detail-field">
+                  <span>Ville du propriétaire</span>
+                  <strong>{{ profil_proprietaire.ville }}</strong>
+                </div>
+              {% endif %}
+
+              {% if profil_proprietaire.adresse %}
+                <div class="admin-detail-field">
+                  <span>Adresse du propriétaire</span>
+                  <strong>{{ profil_proprietaire.adresse }}</strong>
+                </div>
+              {% endif %}
+
+            {% endif %}
+          </div>
+
+          {% if annonce.latitude and annonce.longitude %}
+            <hr class="admin-divider">
+
+            <h3><i class="bx bx-map-alt"></i>️ Localisation</h3>
+
+            <div id="map-admin" class="admin-map"></div>
+          {% endif %}
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+
+{% if annonce.latitude and annonce.longitude %}
+<script>
+  const latitude = parseFloat("{{ annonce.latitude|default:'0' }}".replace(",", "."));
+  const longitude = parseFloat("{{ annonce.longitude|default:'0' }}".replace(",", "."));
+
+  const mapAdmin = L.map("map-admin").setView([latitude, longitude], 14);
+
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
+    attribution: "Tiles &copy; Esri",
+    maxZoom: 19
+  }).addTo(mapAdmin);
+
+  L.marker([latitude, longitude])
+    .addTo(mapAdmin)
+    .bindPopup("{{ annonce.titre|escapejs }}")
+    .openPopup();
+</script>
+{% endif %}
+
+{% endblock %}

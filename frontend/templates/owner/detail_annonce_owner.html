@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Détail annonce{% endblock %}
+
+{% block body %}
+
+<div class="owner-dashboard-pro">
+
+  {% include "includes/sidebar_owner.html" with active="annonces" %}
+
+  <main class="owner-pro-main">
+
+    <section class="owner-detail-content">
+
+      <div class="owner-detail-header">
+        <div>
+          <h1>{{ annonce.titre }}</h1>
+          <p>Visualisation de votre annonce</p>
+        </div>
+
+        <div class="owner-detail-actions">
+          {% if annonce.statut == "brouillon" %}
+            <a href="{% url 'properties:modifier_annonce' annonce.pk %}" class="detail-btn edit">
+              <i class="bx bx-pencil"></i>️ Modifier
+            </a>
+          {% endif %}
+
+          <a href="{% url 'properties:mes_annonces' %}" class="detail-btn back">
+            ← Retour
+          </a>
+        </div>
+      </div>
+
+      <div class="owner-detail-grid">
+
+        <!-- Photos -->
+        <div class="owner-detail-card">
+          <h2><i class="bx bx-camera"></i> Photos</h2>
+
+          <div class="owner-main-photo">
+            {% with photo=photos.first %}
+              {% if photo %}
+                <img src="{{ photo.image.url }}" alt="{{ annonce.titre }}">
+              {% else %}
+                <div class="no-photo"><i class="bx bxs-home"></i></div>
+              {% endif %}
+            {% endwith %}
+          </div>
+
+          <div class="owner-thumbs">
+            {% for photo in photos %}
+              <div class="owner-thumb">
+                <img src="{{ photo.image.url }}" alt="Photo annonce">
+              </div>
+            {% empty %}
+              <div class="owner-thumb"><i class="bx bxs-home"></i></div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Infos -->
+        <div class="owner-detail-card">
+          <h2><i class="bx bx-file"></i> Informations</h2>
+
+          <div class="detail-info-row">
+            <span>Titre</span>
+            <strong>{{ annonce.titre }}</strong>
+          </div>
+
+          <div class="detail-info-row">
+            <span>Description</span>
+            <strong>{{ annonce.description }}</strong>
+          </div>
+
+          <div class="detail-info-row">
+            <span>Ville</span>
+            <strong>{{ annonce.ville }}</strong>
+          </div>
+
+          <div class="detail-info-row">
+            <span>Adresse</span>
+            <strong>{{ annonce.adresse }}</strong>
+          </div>
+
+          <div class="detail-info-row">
+            <span>Type</span>
+            <strong>{{ annonce.get_type_bien_display }}</strong>
+          </div>
+
+          <div class="detail-info-row">
+            <span>Prix</span>
+            <strong>{{ annonce.prix|floatformat:0 }} DH</strong>
+          </div>
+
+          <div class="detail-info-row">
+            <span>Surface</span>
+            <strong>{{ annonce.surface }} m²</strong>
+          </div>
+
+          <div class="detail-info-row">
+            <span>Statut</span>
+
+            {% if annonce.statut == "publiee" %}
+              <strong class="owner-pro-status published">Publiée</strong>
+            {% elif annonce.statut == "en_attente" %}
+              <strong class="owner-pro-status waiting">En attente</strong>
+            {% elif annonce.statut == "brouillon" %}
+              <strong class="owner-pro-status draft">Brouillon</strong>
+            {% elif annonce.statut == "rejetee" %}
+              <strong class="owner-pro-status rejected">Rejetée</strong>
+            {% else %}
+              <strong class="owner-pro-status draft">{{ annonce.statut }}</strong>
+            {% endif %}
+          </div>
+
+          {% if annonce.latitude and annonce.longitude %}
+            <div class="detail-map-title"><i class="bx bx-map-alt"></i>️ Localisation</div>
+            <div id="map-owner-detail"></div>
+          {% endif %}
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+{% if annonce.latitude and annonce.longitude %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const lat = parseFloat("{{ annonce.latitude|default:'0' }}".replace(",", "."));
+  const lng = parseFloat("{{ annonce.longitude|default:'0' }}".replace(",", "."));
+
+  const map = L.map("map-owner-detail").setView([lat, lng], 14);
+
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
+    attribution: "Tiles &copy; Esri",
+    maxZoom: 19
+  }).addTo(map);
+
+  L.marker([lat, lng]).addTo(map).bindPopup("{{ annonce.titre|escapejs }}").openPopup();
+
+  setTimeout(function () {
+    map.invalidateSize();
+  }, 400);
+});
+</script>
+{% endif %}
+{% endblock %}

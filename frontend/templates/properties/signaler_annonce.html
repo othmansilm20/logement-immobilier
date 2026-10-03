@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Signaler une annonce{% endblock %}
+
+{% block body %}
+
+<div class="report-page">
+
+  <div class="report-card">
+
+    <h1 class="report-title"><i class="bx bxs-flag"></i> Signaler cette annonce</h1>
+
+    <p class="report-subtitle">
+      Vous êtes sur le point de signaler l’annonce :
+      <strong>{{ annonce.titre }}</strong>
+    </p>
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="report-field">
+        <label>{{ form.raison.label }}</label>
+        {{ form.raison }}
+      </div>
+
+      <div class="report-field">
+        <label>{{ form.message.label }}</label>
+        {{ form.message }}
+      </div>
+
+      <div class="report-actions">
+        <button type="submit" class="report-submit">
+          Envoyer le signalement
+        </button>
+
+        <a href="{% url 'properties:detail_annonce' annonce.pk %}" class="report-cancel">
+          Annuler
+        </a>
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+{% endblock %}

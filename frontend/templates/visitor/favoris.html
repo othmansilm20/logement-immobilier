@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load static %}
+{% load format_filters %}
+
+{% block title %}Mes favoris{% endblock %}
+
+{% block body %}
+
+<style>
+.fav-page{min-height:100vh;background:#f8fafc;font-family:Inter,Poppins,Arial,sans-serif;}
+.fav-topbar{height:82px;background:#fff;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;padding:0 52px;box-shadow:0 2px 12px rgba(15,23,42,.05);}
+.fav-brand{font-size:26px;font-weight:900;color:#0f172a;}
+.fav-brand span{color:#0d6efd;}
+.fav-search{width:560px;height:48px;border:1px solid #dbe3ef;border-radius:14px;display:flex;overflow:hidden;background:#fff;}
+.fav-search input{flex:1;border:0;outline:0;padding:0 18px;font-size:15px;}
+.fav-search button{width:54px;border:0;background:#0d6efd;color:#fff;font-size:18px;}
+.fav-content{max-width:1600px;margin:auto;padding:32px 48px;}
+.fav-title{font-size:36px;font-weight:900;color:#0f172a;margin:0;}
+.fav-sub{color:#64748b;font-size:17px;margin:8px 0 24px;}
+.fav-toolbar{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:14px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px;box-shadow:0 8px 24px rgba(15,23,42,.06);}
+.fav-tabs{display:flex;}
+.fav-tab{height:46px;padding:0 22px;border:1px solid #dbe3ef;background:#fff;color:#0f172a;font-weight:800;text-decoration:none;display:flex;align-items:center;gap:8px;}
+.fav-tab:first-child{border-radius:10px 0 0 10px;}
+.fav-tab:last-child{border-radius:0 10px 10px 0;}
+.fav-tab.active{background:#0d6efd;color:#fff;border-color:#0d6efd;}
+.fav-tools{display:flex;gap:14px;}
+.fav-tools select,.fav-tools button{height:46px;border:1px solid #dbe3ef;border-radius:10px;background:#fff;padding:0 18px;font-weight:800;color:#0f172a;}
+.fav-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 22px;}
+.fav-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(15,23,42,.07);position:relative;}
+.fav-img{height:110px;background:#eef2f7;overflow:hidden;}
+.fav-img img{width:100%;height:100%;object-fit:cover;}
+.fav-heart{position:absolute;top:12px;right:12px;width:42px;height:42px;border-radius:50%;background:#fff;color:#e11d48;display:flex;align-items:center;justify-content:center;font-size:23px;box-shadow:0 6px 14px rgba(15,23,42,.15);}
+.fav-body{padding:12px 16px 14px;}
+.fav-name{font-size:17px;font-weight:900;color:#0f172a;margin-bottom:4px;}
+.fav-city{color:#64748b;font-size:14px;margin-bottom:8px;}
+.fav-info{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.fav-price{font-size:22px;font-weight:900;color:#0d6efd;}
+.fav-surface{color:#0f172a;font-weight:700;}
+.fav-type{background:#dbeafe;color:#2563eb;padding:5px 14px;border-radius:8px;font-weight:800;font-size:13px;}
+.fav-links{display:flex;align-items:center;justify-content:space-between;margin-top:6px;}
+.fav-links a{font-size:14px;font-weight:800;text-decoration:none;color:#0d6efd;}
+.fav-remove{color:#ef4444!important;}
+.fav-empty{grid-column:1/-1;background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:50px;text-align:center;color:#64748b;}
+.fav-pagination{display:flex;justify-content:center;gap:12px;margin-top:22px;}
+.fav-page-btn{height:42px;min-width:46px;padding:0 16px;border:1px solid #dbe3ef;border-radius:9px;background:#fff;color:#0f172a;text-decoration:none;font-weight:800;display:flex;align-items:center;justify-content:center;}
+.fav-page-btn.active{background:#0d6efd;color:#fff;border-color:#0d6efd;}
+@media(max-width:1200px){.fav-grid{grid-template-columns:repeat(2,1fr)}.fav-search{display:none}}
+@media(max-width:800px){.fav-grid{grid-template-columns:1fr}.fav-topbar{padding:0 20px}.fav-content{padding:24px 20px}}
+@media(max-width:640px){
+  .fav-topbar{height:auto;flex-wrap:wrap;padding:12px 16px;gap:10px;}
+  .fav-tools{flex-wrap:wrap;gap:8px;}
+  .fav-tab{height:40px;padding:0 14px;font-size:14px;}
+  .fav-tools select,.fav-tools button{height:40px;padding:0 12px;font-size:14px;}
+  .fav-img{height:170px;}
+  .fav-name{font-size:16px;}
+  .fav-price{font-size:19px;}
+}
+</style>
+
+<div class="fav-page">
+
+  <header class="fav-topbar">
+    <a href="{% url 'accounts:accueil' %}" class="fav-brand site-logo-link">
+      <img src="{% static 'images/logo.png' %}" alt="Logement Immobilier" class="site-logo-img">
+    </a>
+
+    <div class="fav-brand"><i class="bx bxs-home"></i> Logement <span>Immobilier</span></div>
+
+    <form method="get" class="fav-search">
+      <input type="text" name="q" placeholder="Rechercher une ville, un quartier, une adresse..." value="{{ request.GET.q }}">
+      <button type="submit"><i class="bx bx-search"></i></button>
+    </form>
+
+    {% include "includes/user_profile_button.html" %}
+  </header>
+
+  <main class="fav-content">
+
+    <h1 class="fav-title">Mes Annonces Sauvegardées</h1>
+    <p class="fav-sub">Vous avez {{ favoris|length }} annonces sauvegardées</p>
+
+    <div class="fav-toolbar">
+      <div class="fav-tabs">
+        <a href="#" class="fav-tab active"><i class="bx bx-grid"></i> Grille</a>
+        <a href="#" class="fav-tab"><i class="bx bx-menu"></i> Liste</a>
+      </div>
+
+      <div class="fav-tools">
+        <select>
+          <option>Plus récentes</option>
+          <option>Plus anciennes</option>
+        </select>
+
+        <button type="button"><i class="bx bx-filter-alt"></i> Filtres</button>
+
+        <a href="{% url 'dashboard:visitor_dashboard' %}" class="fav-page-btn">
+          ← Retour
+        </a>
+      </div>
+    </div>
+
+    <section class="fav-grid">
+
+      {% for favori in favoris %}
+        {% with annonce=favori.annonce %}
+        <article class="fav-card">
+
+          <div class="fav-img">
+            {% with photo=annonce.photos.first %}
+              {% if photo %}
+                <img src="{{ photo.image.url }}" alt="{{ annonce.titre }}">
+              {% else %}
+                <i class="bx bxs-home"></i>
+              {% endif %}
+            {% endwith %}
+          </div>
+
+          <div class="fav-heart"><i class="bx bxs-heart"></i></div>
+
+          <div class="fav-body">
+            <div class="fav-name">{{ annonce.titre }}</div>
+            <div class="fav-city">{{ annonce.ville }}</div>
+
+            <div class="fav-info">
+              <span class="fav-price">{{ annonce.prix|espace_milliers }} DH</span>
+              <span class="fav-surface">{{ annonce.surface }} m²</span>
+              <span class="fav-type">{{ annonce.get_type_bien_display }}</span>
+            </div>
+
+            <div class="fav-links">
+              <a href="{% url 'properties:detail_annonce' annonce.pk %}">Voir détails</a>
+              <a href="{% url 'favorites:toggle_favori' annonce.pk %}" class="fav-remove">Supprimer</a>
+            </div>
+          </div>
+
+        </article>
+        {% endwith %}
+      {% empty %}
+        <div class="fav-empty">Vous n’avez encore aucun favori.</div>
+      {% endfor %}
+
+    </section>
+
+    <div class="fav-pagination">
+      <a href="#" class="fav-page-btn">‹ Précédent</a>
+      <a href="#" class="fav-page-btn active">1</a>
+      <a href="#" class="fav-page-btn">2</a>
+      <a href="#" class="fav-page-btn">3</a>
+      <a href="#" class="fav-page-btn">Suivant ›</a>
+    </div>
+
+  </main>
+</div>
+
+{% endblock %}

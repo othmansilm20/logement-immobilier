@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Modifier annonce{% endblock %}
+
+{% block body %}
+
+<div class="admin-pro-layout">
+
+  {% include "includes/sidebar_admin.html" with active="toutes_annonces" %}
+
+  <main class="admin-pro-main">
+
+    <header class="admin-pro-topbar">
+      {% include "includes/user_profile_button.html" %}
+    </header>
+
+    <section class="admin-pro-content">
+
+      <div class="admin-pro-heading">
+        <div>
+          <h1 class="admin-pro-title">Modifier l'annonce</h1>
+          <p class="admin-pro-sub">Modification des informations de l'annonce.</p>
+        </div>
+
+        <a href="{% url 'dashboard:admin_annonces' %}" class="admin-btn secondary">
+          Retour
+        </a>
+      </div>
+
+      <form method="post" enctype="multipart/form-data" class="admin-pro-form-card">
+        {% csrf_token %}
+
+        <div class="admin-form-grid">
+
+          <div class="form-field">
+            <label>Titre</label>
+            <input type="text" name="titre" value="{{ annonce.titre }}" required>
+          </div>
+
+          <div class="form-field">
+            <label>Type de bien</label>
+            <select name="type_bien" required>
+              <option value="appartement" {% if annonce.type_bien == "appartement" %}selected{% endif %}>
+                Appartement
+              </option>
+              <option value="maison" {% if annonce.type_bien == "maison" %}selected{% endif %}>
+                Maison
+              </option>
+              <option value="villa" {% if annonce.type_bien == "villa" %}selected{% endif %}>
+                Villa
+              </option>
+              <option value="studio" {% if annonce.type_bien == "studio" %}selected{% endif %}>
+                Studio
+              </option>
+            </select>
+          </div>
+
+          <div class="form-field">
+            <label>Prix</label>
+            <input type="number" name="prix" value="{{ annonce.prix }}" required>
+          </div>
+
+          <div class="form-field">
+            <label>Surface</label>
+            <input type="number" name="surface" value="{{ annonce.surface }}" required>
+          </div>
+
+          <div class="form-field">
+            <label>Ville</label>
+            <input type="text" name="ville" value="{{ annonce.ville }}" required>
+          </div>
+
+          <div class="form-field">
+            <label>Adresse</label>
+            <input type="text" name="adresse" value="{{ annonce.adresse }}" required>
+          </div>
+
+          <div class="form-field">
+            <label>Statut</label>
+            <select name="statut" required>
+              <option value="brouillon" {% if annonce.statut == "brouillon" %}selected{% endif %}>
+                Brouillon
+              </option>
+              <option value="en_attente" {% if annonce.statut == "en_attente" %}selected{% endif %}>
+                En attente
+              </option>
+              <option value="publiee" {% if annonce.statut == "publiee" %}selected{% endif %}>
+                Publiée
+              </option>
+              <option value="rejetee" {% if annonce.statut == "rejetee" %}selected{% endif %}>
+                Rejetée
+              </option>
+              <option value="archivee" {% if annonce.statut == "archivee" %}selected{% endif %}>
+                Archivée
+              </option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="form-field">
+          <label>Description</label>
+          <textarea name="description" rows="6" required>{{ annonce.description }}</textarea>
+        </div>
+
+        <div class="form-field">
+          <label>Photos de l'annonce</label>
+
+          {% if photos %}
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:10px;">
+              {% for photo in photos %}
+                <div style="border:1px solid #e2e8f0;border-radius:8px;padding:12px;background:#fff;">
+                  <img src="{{ photo.image.url }}" alt="Photo annonce" style="width:100%;height:130px;object-fit:cover;border-radius:6px;margin-bottom:10px;">
+
+                  <label style="display:block;font-weight:700;margin-bottom:6px;">Remplacer</label>
+                  <input type="file" name="photo_{{ photo.pk }}" accept="image/*">
+
+                  <label class="check-label" style="margin-top:10px;">
+                    <input type="checkbox" name="delete_photo_{{ photo.pk }}">
+                    Supprimer cette photo
+                  </label>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p>Aucune photo pour cette annonce.</p>
+          {% endif %}
+        </div>
+
+        <div class="form-field">
+          <label>Ajouter des photos</label>
+          <input type="file" name="photos" multiple accept="image/*">
+        </div>
+
+        <div class="admin-form-actions">
+          <button type="submit" class="admin-btn view">
+            Enregistrer les modifications
+          </button>
+
+          <a href="{% url 'dashboard:admin_annonces' %}" class="admin-btn secondary">
+            Annuler
+          </a>
+        </div>
+
+      </form>
+
+    </section>
+
+  </main>
+
+</div>
+
+{% endblock %}

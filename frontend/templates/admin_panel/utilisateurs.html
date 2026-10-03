@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Gestion des utilisateurs{% endblock %}
+
+{% block body %}
+
+<div class="admin-pro-layout">
+
+  {% include "includes/sidebar_admin.html" with active="utilisateurs" %}
+
+  <main class="admin-pro-main">
+
+    <header class="admin-pro-topbar">
+      {% include "includes/user_profile_button.html" %}
+    </header>
+
+    <section class="admin-pro-content">
+
+      <div class="admin-pro-heading">
+        <div>
+          <h1 class="admin-pro-title">Gestion des utilisateurs</h1>
+          <p class="admin-pro-sub">Liste des utilisateurs inscrits sur la plateforme.</p>
+        </div>
+      </div>
+
+      <div class="admin-users-card">
+
+        <form method="get" class="admin-pro-filter users">
+          <input type="text" name="q" placeholder="Rechercher par nom ou email..." value="{{ q }}">
+
+          <select name="role">
+            <option value="">Tous les rôles</option>
+            <option value="admin" {% if role == "admin" %}selected{% endif %}>Admin</option>
+            <option value="proprietaire" {% if role == "proprietaire" %}selected{% endif %}>Propriétaire</option>
+            <option value="visiteur" {% if role == "visiteur" %}selected{% endif %}>Visiteur</option>
+          </select>
+
+          <select name="statut">
+            <option value="">Tous les statuts</option>
+            <option value="actif" {% if statut == "actif" %}selected{% endif %}>Actif</option>
+            <option value="inactif" {% if statut == "inactif" %}selected{% endif %}>Inactif</option>
+          </select>
+
+          <button type="submit" class="admin-btn view">Rechercher</button>
+
+          <a href="{% url 'dashboard:admin_utilisateurs' %}" class="admin-btn secondary">
+            Réinitialiser
+          </a>
+        </form>
+
+        <div class="admin-users-table">
+
+          <div class="admin-users-head">
+            <span>Utilisateur</span>
+            <span>Email</span>
+            <span>Rôle</span>
+            <span>Statut</span>
+            <span>Date inscription</span>
+            <span>Actions</span>
+          </div>
+
+          {% for user in users %}
+          <div class="admin-users-row">
+
+            <div class="admin-user-info">
+              <div class="admin-user-avatar"><i class="bx bxs-user"></i></div>
+              <strong>{{ user.get_full_name|default:user.username }}</strong>
+            </div>
+
+            <span>{{ user.email|default:"Email non renseigné" }}</span>
+
+            <span>
+              {% if user.is_superuser %}
+                <span class="role-badge admin">Admin</span>
+              {% elif user.profile.role == "proprietaire" %}
+                <span class="role-badge owner">Propriétaire</span>
+              {% elif user.profile.role == "visiteur" %}
+                <span class="role-badge visitor">Visiteur</span>
+              {% else %}
+                <span class="role-badge visitor">Non défini</span>
+              {% endif %}
+            </span>
+
+            <span>
+              {% if user.is_active %}
+                <span class="status-user active">Actif</span>
+              {% else %}
+                <span class="status-user inactive">Inactif</span>
+              {% endif %}
+            </span>
+
+            <span>{{ user.date_joined|date:"d/m/Y H:i" }}</span>
+
+            <div class="admin-user-actions">
+              <a href="{% url 'dashboard:admin_detail_utilisateur' user.pk %}" title="Voir détails"><i class="bx bx-show"></i></a>
+              <a href="{% url 'dashboard:admin_modifier_utilisateur' user.pk %}" title="Modifier"><i class="bx bx-pencil"></i></a>
+
+              {% if user != request.user %}
+                <form method="post"
+                      action="{% url 'dashboard:admin_toggle_utilisateur' user.pk %}"
+                      onsubmit="return confirm('Voulez-vous vraiment changer le statut de cet utilisateur ?');">
+                  {% csrf_token %}
+                  <button type="submit" title="Activer/Désactiver">
+                    {% if user.is_active %}<i class="bx bx-block"></i>{% else %}<i class="bx bx-check-circle"></i>{% endif %}
+                  </button>
+                </form>
+
+                <form method="post"
+                      action="{% url 'dashboard:admin_supprimer_utilisateur' user.pk %}"
+                      onsubmit="return confirm('Voulez-vous vraiment supprimer cet utilisateur définitivement ?');">
+                  {% csrf_token %}
+                  <button type="submit" class="delete" title="Supprimer"><i class="bx bx-trash"></i></button>
+                </form>
+              {% else %}
+                <span class="status-user pending">Compte actuel</span>
+              {% endif %}
+            </div>
+
+          </div>
+          {% empty %}
+          <div class="admin-empty">
+            Aucun utilisateur trouvé.
+          </div>
+          {% endfor %}
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+{% endblock %}

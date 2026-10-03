@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Demandes de visite{% endblock %}
+
+{% block body %}
+
+<div class="visit-page">
+
+  {% include "includes/sidebar_owner.html" with active="visites" %}
+
+  <main class="visit-main">
+
+    <section class="visit-content">
+
+      <div class="visit-title">
+        <h1>Demandes de visite</h1>
+        <p>{{ total_demandes }} demande{% if total_demandes > 1 %}s{% endif %} trouvée{% if total_demandes > 1 %}s{% endif %}</p>
+      </div>
+
+      <form method="get" class="visit-filters">
+
+        <div class="visit-filter">
+          <label>Filtrer par statut</label>
+          <select name="statut">
+            <option value="">Tous les statuts</option>
+            <option value="en_attente" {% if statut == "en_attente" %}selected{% endif %}>En attente</option>
+            <option value="acceptee" {% if statut == "acceptee" %}selected{% endif %}>Confirmée</option>
+            <option value="refusee" {% if statut == "refusee" %}selected{% endif %}>Refusée</option>
+          </select>
+        </div>
+
+        <div class="visit-filter">
+          <label>Trier par date</label>
+          <select name="tri">
+            <option value="recente" {% if tri != "ancienne" %}selected{% endif %}>Plus récentes</option>
+            <option value="ancienne" {% if tri == "ancienne" %}selected{% endif %}>Plus anciennes</option>
+          </select>
+        </div>
+
+        <div class="visit-filter search-filter">
+          <label>Recherche</label>
+          <input type="text" name="q" placeholder="Rechercher un visiteur ou une annonce..." value="{{ q }}">
+        </div>
+
+        <button type="submit" class="visit-filter-btn">Filtrer</button>
+
+      </form>
+
+      <div class="visit-list">
+
+        {% for demande in demandes %}
+        <div class="visit-card">
+
+          <div class="visitor-info">
+            <div class="visitor-photo"><i class="bx bxs-user"></i></div>
+            <div>
+              <h3>{{ demande.visiteur.get_full_name|default:demande.visiteur.username }}</h3>
+              <p><i class="bx bx-envelope"></i> {{ demande.visiteur.email|default:"Email non renseigné" }}</p>
+
+              {% if demande.visiteur.profile.telephone %}
+                <p><i class="bx bx-phone"></i> {{ demande.visiteur.profile.telephone }}</p>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="visit-property">
+            <div class="property-thumb">
+              {% with photo=demande.annonce.photos.first %}
+                {% if photo %}
+                  <img src="{{ photo.image.url }}" alt="{{ demande.annonce.titre }}">
+                {% else %}
+                  <i class="bx bxs-home"></i>
+                {% endif %}
+              {% endwith %}
+            </div>
+
+            <div>
+              <h3>{{ demande.annonce.titre }}</h3>
+              <p><i class="bx bxs-map"></i> {{ demande.annonce.ville }}</p>
+              <p>{{ demande.annonce.surface }} m²</p>
+            </div>
+          </div>
+
+          <div class="visit-date">
+            <p><i class="bx bx-calendar"></i> {{ demande.date_demande|date:"d/m/Y à H:i" }}</p>
+            <p class="visit-message"><i class="bx bx-message-square-dots"></i> {{ demande.message|default:"Aucun message envoyé."|truncatechars:70 }}</p>
+          </div>
+
+          <div class="visit-status-box">
+            {% if demande.statut == "en_attente" %}
+              <span class="visit-status waiting">● En attente</span>
+            {% elif demande.statut == "acceptee" %}
+              <span class="visit-status accepted">● Confirmée</span>
+            {% else %}
+              <span class="visit-status refused">● Refusée</span>
+            {% endif %}
+          </div>
+
+          <div class="visit-actions">
+
+            {% if demande.statut == "en_attente" %}
+
+              <div class="visit-action-row">
+                <form method="POST" action="{% url 'visits:accepter_demande' demande.pk %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="reponse_proprietaire" value="Votre demande de visite a été acceptée.">
+                  <button type="submit" class="visit-btn accept">Accepter</button>
+                </form>
+
+                <form method="POST" action="{% url 'visits:refuser_demande' demande.pk %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="reponse_proprietaire" value="Votre demande de visite a été refusée.">
+                  <button type="submit" class="visit-btn refuse">Refuser</button>
+                </form>
+              </div>
+
+              <a href="{% url 'properties:detail_annonce_owner' demande.annonce.pk %}" class="visit-btn secondary full">
+                Proposer un créneau
+              </a>
+
+            {% elif demande.statut == "acceptee" %}
+
+              <div class="visit-action-row">
+                <button type="button" class="visit-btn outline-red">Annuler</button>
+
+                <a href="{% url 'properties:detail_annonce_owner' demande.annonce.pk %}" class="visit-btn secondary">
+                  Voir détails
+                </a>
+              </div>
+
+            {% else %}
+
+              <button type="button" class="visit-btn refuse">Supprimer</button>
+
+            {% endif %}
+
+          </div>
+
+        </div>
+        {% empty %}
+          <div class="visit-empty">
+            Aucune demande de visite pour le moment.
+          </div>
+        {% endfor %}
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+{% endblock %}
