@@ -4,7 +4,7 @@ Plateforme web de gestion d'annonces immobilières développée avec **Django**.
 
 ## 🌐 Démo
 
-🔗 **Application en ligne :** [Voir la démo](https://lnkd.in/edMyYp39)
+🔗 **Application en ligne :** [Voir la démo](https://logement-immobilier.onrender.com)
 
 ## Fonctionnalités
 
